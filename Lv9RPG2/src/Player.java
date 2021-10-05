@@ -8,14 +8,9 @@ public class Player {
 		this.money = 100000;
 	}
 	
-	public int getMoney() {
-		return this.money;
-	}
-	public void setMoney(int money) {
-		this.money = this.money-money;
-	}
 	public void itemManager() {
 		while(true) {
+			System.out.println("나의 보유 머니 : " +this.money+"원");
 			this.itemManagerMenuPrint();
 			int sel = sc.nextInt();
 			if(sel == 1) {

@@ -5,13 +5,14 @@ class MainGame {
 	private Inventory inventory = new Inventory();
 	private Shop shop = new Shop();
 	private Player player = new Player();
+	private Guild guild = new Guild();
 	public void run( ) {
 		
 		while(true) {
 			MainMenuPrint();
 			int sel = sc.nextInt();
 			if(sel == 1) {
-				
+				this.guild.guildManager();
 			}
 			if(sel == 2) {
 				this.player.itemManager();
@@ -26,7 +27,7 @@ class MainGame {
 				
 			}
 			if(sel == 6) {
-				
+				break;
 			}
 		}
 	}
