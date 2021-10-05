@@ -4,7 +4,7 @@ import java.util.Scanner;
 public class Shop {
 	private Scanner sc = new Scanner(System.in);
 	public static Shop instance = new Shop();
-	ArrayList<Item> itemList = new ArrayList<>();
+	public static ArrayList<Item> itemList = new ArrayList<>();
 	Inventory inventory = Inventory.instance;
 	
 	public void buyItem() {
@@ -18,11 +18,12 @@ public class Shop {
 			}
 			if(idx != -1) {
 				if(this.itemList.get(idx).getPrice() <= Player.money) {
-					Item temp = this.itemList.get(idx);
-					System.out.println("invensize : " +this.inventory.itemList.size());
+					String kind2 = this.itemList.get(idx).getKind();
+					String name2 = this.itemList.get(idx).getName();
+					int power = this.itemList.get(idx).getPower();
+					int price = this.itemList.get(idx).getPrice();
+					Item temp = new Item(kind2 , name2 , power , price);
 					this.inventory.itemList.add(temp);	
-					System.out.println("intvensize : " +this.inventory.itemList.size());
-					System.out.println("item : " +this.itemList.size());
 					
 					Player.money -= this.itemList.get(idx).getPrice();
 				}else System.out.println("보유머니가 부족합니다.");
@@ -76,6 +77,8 @@ public class Shop {
 				int price = sc.nextInt();
 				this.itemList.add(new Item(kind , name , power , price));
 				sort();
+				sort();
+				sort();
 			}else System.out.println("해당 아이템의 이름이 이미 존재합니다. ");
 		}else System.out.println("숫자의 범위를 벗어났습니다.");
 	}
@@ -107,11 +110,11 @@ public class Shop {
 	}
 	public void inventoryList() {
 		System.out.println("=============인벤토리===========");
-		System.out.println("번호\t종류\t이름\t파워\t가격\t착용/미착용");
+		System.out.println("번호\t종류\t이름\t파워\t가격\t착용/미착용\t착용유저");
 		for(int i=0; i<this.inventory.itemList.size(); i++) {
 			System.out.print("["+(i+1)+"]\t" +this.inventory.itemList.get(i).getKind()+"\t"+this.inventory.itemList.get(i).getName()+"\t"
 					+this.inventory.itemList.get(i).getPower()+"\t"+this.inventory.itemList.get(i).getPrice()
-					+"\t"+this.inventory.itemList.get(i).getUse()+"\n");
+					+"\t"+this.inventory.itemList.get(i).getUse()+"\t"+this.inventory.itemList.get(i).getUserName()+"\n");
 		}
 		System.out.println("================================");
 	}

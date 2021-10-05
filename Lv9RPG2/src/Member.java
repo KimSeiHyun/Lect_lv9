@@ -21,6 +21,19 @@ public class Member {
 		this.def = def;
 		this.exp = exp;
 	}
+	public Member(String name , int level , int hp , int maxHp , int atk , int def ,int exp , boolean party , Item weapon , Item armor , Item accessorise) {
+		this.name = name;
+		this.level = level;
+		this.hp = hp;
+		this.maxHp = maxHp;
+		this.atk = atk;
+		this.def = def;
+		this.exp = exp;
+		this.party = party;
+		this.weapon = weapon;
+		this.armor = armor;
+		this.accessorise = accessorise;
+	}
 	public String getName() {
 		return this.name;
 	}

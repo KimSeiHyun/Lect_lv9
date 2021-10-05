@@ -9,11 +9,20 @@ public class Item {
 	private int power;
 	private int price;
 	private boolean use = false;
+	private String userName;
 	public Item (String kind , String name , int power , int price) {
 		this.kind = kind;
 		this.name = name;
 		this.power = power;
 		this.price = price;
+	}
+	public Item (String kind , String name , int power , int price , boolean use, String userName) {
+		this.kind = kind;
+		this.name = name;
+		this.power = power;
+		this.price = price;
+		this.use = use;
+		this.userName = userName;
 	}
 	public String getKind() {
 		return this.kind;
@@ -30,14 +39,23 @@ public class Item {
 	public boolean getUse() {
 		return this.use;
 	}
+	public String getUserName() {
+		return this.userName;
+	}
 	public void setUse() {
-		if(this.use == true) {
-			this.use = false;
-			return;
-		}else if(this.use == false){
-			this.use = true;
-			return;
+		while(true) {
+			if(this.use == false) {
+				this.use = true;
+				break;
+			}
+			if(this.use == true) {
+				this.use = false;
+				break;
+			}
 		}
+	}
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 	
 }
