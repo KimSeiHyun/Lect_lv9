@@ -8,7 +8,7 @@ public class Item {
 	private String name;
 	private int power;
 	private int price;
-	
+	private boolean use = false;
 	public Item (String kind , String name , int power , int price) {
 		this.kind = kind;
 		this.name = name;
@@ -26,6 +26,9 @@ public class Item {
 	}
 	public int getPrice() {
 		return this.price;
+	}
+	public boolean getUse() {
+		return this.use;
 	}
 	public int getWEPON() {
 		return this.WEAPON;

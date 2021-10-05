@@ -3,7 +3,7 @@ import java.util.Scanner;
 public class Player {
 	Scanner sc = new Scanner(System.in);
 	Shop shop = new Shop();
-	private int money;
+	public static int money;
 	public Player() {
 		this.money = 100000;
 	}
