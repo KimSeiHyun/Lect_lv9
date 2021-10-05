@@ -3,8 +3,9 @@ import java.util.Scanner;
 
 public class Shop {
 	private Scanner sc = new Scanner(System.in);
+	public static Shop instance = new Shop();
 	ArrayList<Item> itemList = new ArrayList<>();
-	private Inventory inventory = Inventory.instance;
+	Inventory inventory = Inventory.instance;
 	
 	public void buyItem() {
 		if(this.itemList.size() != 0) {
@@ -18,7 +19,11 @@ public class Shop {
 			if(idx != -1) {
 				if(this.itemList.get(idx).getPrice() <= Player.money) {
 					Item temp = this.itemList.get(idx);
+					System.out.println("invensize : " +this.inventory.itemList.size());
 					this.inventory.itemList.add(temp);	
+					System.out.println("intvensize : " +this.inventory.itemList.size());
+					System.out.println("item : " +this.itemList.size());
+					
 					Player.money -= this.itemList.get(idx).getPrice();
 				}else System.out.println("보유머니가 부족합니다.");
 			}else System.out.println("구매할 아이템의 이름을 정확히 입력해주세요 . ");
@@ -102,10 +107,11 @@ public class Shop {
 	}
 	public void inventoryList() {
 		System.out.println("=============인벤토리===========");
-		System.out.println("종류\t이름\t파워\t가격");
+		System.out.println("번호\t종류\t이름\t파워\t가격\t착용/미착용");
 		for(int i=0; i<this.inventory.itemList.size(); i++) {
-			System.out.print(this.inventory.itemList.get(i).getKind()+"\t"+this.inventory.itemList.get(i).getName()+"\t"
-					+this.inventory.itemList.get(i).getPower()+"\t"+this.inventory.itemList.get(i).getPrice()+"\n");
+			System.out.print("["+(i+1)+"]\t" +this.inventory.itemList.get(i).getKind()+"\t"+this.inventory.itemList.get(i).getName()+"\t"
+					+this.inventory.itemList.get(i).getPower()+"\t"+this.inventory.itemList.get(i).getPrice()
+					+"\t"+this.inventory.itemList.get(i).getUse()+"\n");
 		}
 		System.out.println("================================");
 	}

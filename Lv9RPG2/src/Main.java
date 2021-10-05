@@ -3,6 +3,7 @@ import java.util.Scanner;
 class MainGame {
 	public static Scanner sc = new Scanner(System.in);
 	private Inventory inventory = new Inventory();
+	private FileManager fm = new FileManager();
 	private Shop shop = new Shop();
 	private Player player = new Player();
 	private Guild guild = new Guild();
@@ -18,13 +19,13 @@ class MainGame {
 				this.player.itemManager();
 			}
 			if(sel == 3) {
-				
+				this.inventory.inventoryManager();
 			}
 			if(sel == 4) {
-				
+				this.fm.save();
 			}
 			if(sel == 5) {
-				
+				this.fm.load();
 			}
 			if(sel == 6) {
 				break;

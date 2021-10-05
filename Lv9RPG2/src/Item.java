@@ -30,8 +30,14 @@ public class Item {
 	public boolean getUse() {
 		return this.use;
 	}
-	public int getWEPON() {
-		return this.WEAPON;
+	public void setUse() {
+		if(this.use == true) {
+			this.use = false;
+			return;
+		}else if(this.use == false){
+			this.use = true;
+			return;
+		}
 	}
 	
 }

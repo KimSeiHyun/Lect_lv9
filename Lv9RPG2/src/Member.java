@@ -7,9 +7,10 @@ public class Member {
 	private int atk;
 	private int def;
 	private int exp;
+	private boolean party = false;
 	private Item weapon;
 	private Item armor;
-	private Item ring;
+	private Item accessorise;
 	
 	public Member(String name , int level , int hp , int maxHp , int atk , int def ,int exp) {
 		this.name = name;
@@ -41,6 +42,57 @@ public class Member {
 	}
 	public int getExp() {
 		return this.exp;
+	}
+	public boolean getParty() {
+		return this.party;
+	}
+	public Item getWeapon() {
+		return this.weapon;
+	}
+	public Item getArmor() {
+		return this.armor;
+	}
+	public Item getAccessorise() {
+		return this.accessorise;
+	}
+	
+	public void setParty() {
+		
+		if(this.party == false) {
+			this.party = true;
+			
+			return;
+		}
+		else if(this.party == true) {
+			this.party = false;
+			
+			return;
+		}
+	}
+	
+	public void setAtk(int atk) {
+		this.atk = this.atk + atk;
+	}
+	
+	public void setDef(int def) {
+		this.def = this.def + def;
+	}
+	
+	public void setMaxHp(int maxHp) {
+		this.hp = this.hp + maxHp;
+		this.maxHp = this.maxHp + maxHp;
+	}
+	
+	public void setWeapon(Item weapon) {
+		this.weapon = weapon;
+	}
+	
+	public void setArmor(Item armor) {
+		this.armor = armor;
+	}
+	
+	public void setAccessorise(Item accessorise) {
+		this.accessorise = accessorise;
 	}
 	
 }
