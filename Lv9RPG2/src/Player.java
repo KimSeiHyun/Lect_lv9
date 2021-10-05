@@ -19,16 +19,16 @@ public class Player {
 			this.itemManagerMenuPrint();
 			int sel = sc.nextInt();
 			if(sel == 1) {
-				
+				this.shop.buyItem();
 			}
 			if(sel == 2) {
-				
+				this.shop.sellItem();
 			}
 			if(sel == 3) {
-				
+				this.shop.addItem();
 			}
 			if(sel == 4) {
-				
+				this.shop.delItem();
 			}
 			if(sel == 5) {
 				break;
