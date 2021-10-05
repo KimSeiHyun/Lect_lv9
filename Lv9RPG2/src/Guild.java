@@ -1,9 +1,10 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Guild {
 
 	Scanner sc = new Scanner(System.in);
-	
+	ArrayList<Member> member = new ArrayList<>();
 	public void guildManager() {
 		while(true) {
 			guildMainMenuPrint();
@@ -37,7 +38,10 @@ public class Guild {
 	}
 	
 	private void GuildMemberList() {
-		
+		if(this.member.size() != 0) {
+			System.out.println("이름\t레벨\t체력\t공격력\t방어력\t경험치");
+			
+		}else System.out.println("길드원이 존재하지 않습니다.");
 	}
 	
 	private void addGuildMember() {
