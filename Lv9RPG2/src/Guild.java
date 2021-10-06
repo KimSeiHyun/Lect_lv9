@@ -59,6 +59,7 @@ public class Guild {
 		int sel = sc.nextInt();
 		if(sel == 1) {
 			if(Player.money >= 10000) {
+				int asdasd = 0;
 				String name = "";
 				String nameTemp1[] = {"김" , "이" , "박" , "우" , "손" , "베" , "프" };
 				String nameTemp2[] = {"세" , "은" , "지" , "광" , "좌" , "짜" , "장" };
