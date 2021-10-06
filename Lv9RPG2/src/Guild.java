@@ -90,7 +90,12 @@ public class Guild {
 				int atk = rn.nextInt(3)+1;
 				int def = rn.nextInt(3)+1;
 				int exp = 0;
-				this.member.add(new Member(name , level , hp , maxHp , atk , def , exp));
+				if(this.partyMember <4) {
+					this.member.add(new Member(name , level , hp , maxHp , atk , def , exp , true));
+					partyMember ++;
+				}else {
+					this.member.add(new Member(name , level , hp , maxHp , atk , def , exp));
+				}
 				Player.money -= 10000;
 			}else System.out.println("비용이 모자랍니다.");
 		}
