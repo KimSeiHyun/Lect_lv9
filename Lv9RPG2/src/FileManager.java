@@ -146,6 +146,9 @@ public class FileManager {
 				this.guild.member.add(new Member(temp[0] , Integer.parseInt(temp[1]) , Integer.parseInt(temp[2]) 
 						, Integer.parseInt(temp[3]) , Integer.parseInt(temp[4]) , Integer.parseInt(temp[5]) 
 						, Integer.parseInt(temp[6]) , party , weapon , armor , accessorise));
+				if(party == true) {
+					Guild.partyMember ++;
+				}
 			}
 			fr.close();
 			br.close();

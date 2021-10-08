@@ -7,6 +7,71 @@ public class Shop {
 	public static ArrayList<Item> itemList = new ArrayList<>();
 	Inventory inventory = Inventory.instance;
 	
+	public static void ShopData() {
+		String kind = "무기";
+		String name = "목검";
+		int power = 5;
+		int price = 500;
+		Item item = new Item(kind , name, power , price);
+		itemList.add(item);
+		
+		kind = "무기";
+		name = "철검";
+		power = 10;
+		price = 1000;
+		item = new Item(kind, name , power , price);
+		itemList.add(item);
+		
+		kind = "무기";
+		name = "강철검";
+		power = 15;
+		price = 1500;
+		item = new Item(kind, name , power , price);
+		itemList.add(item);
+
+		kind = "방어구";
+		name = "나무갑옷";
+		power = 5;
+		price = 500;
+		item = new Item(kind, name , power , price);
+		itemList.add(item);
+
+		kind = "방어구";
+		name = "철갑옷";
+		power = 10;
+		price = 1000;
+		item = new Item(kind, name , power , price);
+		itemList.add(item);
+		
+		kind = "방어구";
+		name = "판금갑옷";
+		power = 15;
+		price = 1500;
+		item = new Item(kind, name , power , price);
+		itemList.add(item);
+		
+		kind = "장신구";
+		name = "나무반지";
+		power = 20;
+		price = 2000;
+		item = new Item(kind, name , power , price);
+		itemList.add(item);
+
+		kind = "장신구";
+		name = "은색반지";
+		power = 40;
+		price = 4000;
+		item = new Item(kind, name , power , price);
+		itemList.add(item);
+		
+		kind = "장신구";
+		name = "금색반지";
+		power = 60;
+		price = 6000;
+		item = new Item(kind, name , power , price);
+		itemList.add(item);
+		
+	}
 	public void buyItem() {
 		if(this.itemList.size() != 0) {
 			shopList();

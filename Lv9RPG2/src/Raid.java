@@ -8,9 +8,9 @@ public class Raid {
 	private Guild guild = Guild.instance;
 	private Inventory inventory = Inventory.instance;
 	public static int level = 1;
-	public static int atk = 10;
+	public static int atk = 500;
 	public static int def = 3;
-	public static int hp = 100;
+	public static int hp = 500;
 	public static int maxHp = 100;
 	
 
@@ -95,11 +95,11 @@ public class Raid {
 						}
 					}
 				}
-				System.out.print("action : ");
+				
 				for(int i=0; i<action.length; i++) {
 					System.out.print(action[i] + " ");
 				}System.out.println();
-				System.out.print("partyMemberIdx : ");
+				
 				for(int i=0; i<action.length; i++) {
 					System.out.print(partyMemberIdx[i] + " ");
 				}System.out.println();
@@ -161,9 +161,33 @@ public class Raid {
 					if(this.guild.member.get(rIdx).getHp() <= 0 ) {
 						System.out.printf("%s는 hp가 0이 되어 파티에서 제외됐다.\n",this.guild.member.get(rIdx).getName());
 						this.guild.partyMember --;
-						this.guild.member.get(rIdx).setParty();
+						if(this.guild.member.get(rIdx).getWeapon() != null) {
+							for(int i=0; i<this.inventory.itemList.size(); i++) {
+								if(this.inventory.itemList.get(i).getKind().equals("무기") && this.guild.member.get(rIdx).getName().equals(this.inventory.itemList.get(i).getUserName())) {
+									this.inventory.itemList.get(i).setUse();
+									this.inventory.itemList.get(i).setUserName(null);
+								}
+							}
+						}
+						if(this.guild.member.get(rIdx).getArmor() != null) {
+							for(int i=0; i<this.inventory.itemList.size(); i++) {
+								if(this.inventory.itemList.get(i).getKind().equals("방어구") && this.guild.member.get(rIdx).getName().equals(this.inventory.itemList.get(i).getUserName())) {
+									this.inventory.itemList.get(i).setUse();
+									this.inventory.itemList.get(i).setUserName(null);
+								}
+							}
+						}
+						if(this.guild.member.get(rIdx).getAccessorise() != null) {
+							for(int i=0; i<this.inventory.itemList.size(); i++) {
+								if(this.inventory.itemList.get(i).getKind().equals("장신구") && this.guild.member.get(rIdx).getName().equals(this.inventory.itemList.get(i).getUserName())) {
+									this.inventory.itemList.get(i).setUse();
+									this.inventory.itemList.get(i).setUserName(null);
+								}
+							}
+						}
 						if(this.guild.partyMember == 0) {
 							check2 = 1;
+							this.guild.member.remove(rIdx);
 							break;
 						}else if(this.guild.partyMember != 0){
 							int tempAction[] = action;
@@ -178,7 +202,13 @@ public class Raid {
 									x++;
 								}
 							}
+							System.out.println("----현재 남은 맴버----");
+							for(int i=0; i<action.length; i++) {
+								System.out.println(this.guild.member.get(partyMemberIdx[i]).getName());
+							}
+							System.out.println("-------------------");
 						}
+						this.guild.member.remove(rIdx);
 					}
 					break;
 				}//while(true)

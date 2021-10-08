@@ -105,6 +105,11 @@ public class Guild {
 	
 	private void deleteGuildMember() {
 		if(this.member.size() != 0 ) {
+			System.out.println("------길드원목록-----");
+			for(int i=0; i<this.member.size(); i++) {
+				System.out.println(this.member.get(i).getName());
+			}
+			System.out.println("-------------------");
 			System.out.println("추방할 길드원의 이름 입력 : ");
 			String name = sc.next();
 			int idx = -1;
@@ -113,28 +118,33 @@ public class Guild {
 			}
 			if(idx != -1) {
 				if(this.member.get(idx).getWeapon() != null) {
-					String itemName = this.member.get(idx).getWeapon().getName();
 					for(int i=0; i<this.inventory.itemList.size(); i++) {
-						if(this.inventory.itemList.get(i).getName().equals(itemName)) {
+						if(this.inventory.itemList.get(i).getKind().equals("무기") && this.member.get(idx).getName().equals(this.inventory.itemList.get(i).getUserName())) {
 							this.inventory.itemList.get(i).setUse();
+							this.inventory.itemList.get(i).setUserName(null);
 						}
 					}
 				}
 				if(this.member.get(idx).getArmor() != null) {
 					String itemName = this.member.get(idx).getArmor().getName();
 					for(int i=0; i<this.inventory.itemList.size(); i++) {
-						if(this.inventory.itemList.get(i).getName().equals(itemName)) {
+						if(this.inventory.itemList.get(i).getKind().equals("방어구") && this.member.get(idx).getName().equals(this.inventory.itemList.get(i).getUserName())) {
 							this.inventory.itemList.get(i).setUse();
+							this.inventory.itemList.get(i).setUserName(null);
 						}
 					}
 				}
 				if(this.member.get(idx).getAccessorise() != null) {
 					String itemName = this.member.get(idx).getAccessorise().getName();
 					for(int i=0; i<this.inventory.itemList.size(); i++) {
-						if(this.inventory.itemList.get(i).getName().equals(itemName)) {
+						if(this.inventory.itemList.get(i).getKind().equals("장신구") && this.member.get(idx).getName().equals(this.inventory.itemList.get(i).getUserName())) {
 							this.inventory.itemList.get(i).setUse();
+							this.inventory.itemList.get(i).setUserName(null);
 						}
 					}
+				}
+				if(this.member.get(idx).getParty() == true) {
+					this.partyMember --;
 				}
 				this.member.remove(idx);
 			}else System.out.println("길드원의 이름을 찾을 수 없습니다.");
@@ -180,6 +190,7 @@ public class Guild {
 				if(this.member.get(idx).getParty() == true) {
 					this.member.get(idx).setParty();
 					this.partyMember--;
+					System.out.println("현재 파티원의 수 : " + this.partyMember);
 				}else System.out.println("해당 파티원은 파티에 가입되어있지 않습니다.");
 			}else System.out.println("추방할 파티원의 이름을 다시 확인해주세요 . ");
 		}else System.out.println("추방할 파티원이 존재하지 않습니다 . ");

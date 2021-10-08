@@ -4,12 +4,11 @@ class MainGame {
 	public static Scanner sc = new Scanner(System.in);
 	private Inventory inventory = new Inventory();
 	private FileManager fm = new FileManager();
-	private Shop shop = new Shop();
 	private Player player = new Player();
 	private Guild guild = new Guild();
 	private Raid raid = new Raid();
 	public void run( ) {
-		
+		Shop.ShopData();
 		while(true) {
 			MainMenuPrint();
 			int sel = sc.nextInt();
