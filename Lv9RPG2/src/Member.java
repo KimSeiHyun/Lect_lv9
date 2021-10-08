@@ -101,9 +101,29 @@ public class Member {
 		this.def = this.def + def;
 	}
 	
+	public void setDefActtion() {
+		this.def = this.def*2;
+	}
+	public void setDefFinish() {
+		this.def = this.def/2;
+	}
+	
+	public void setMinusHp (int hp) {
+		this.hp -= hp;
+	}
+	public void setHealHp (int maxHp) {
+		this.hp = this.maxHp;
+	}
 	public void setMaxHp(int maxHp) {
 		this.hp = this.hp + maxHp;
 		this.maxHp = this.maxHp + maxHp;
+	}
+	
+	public void setLevel (int level) {
+		this.level = level;
+	}
+	public void setExp(int exp) {
+		this.exp = exp;
 	}
 	
 	public void setWeapon(Item weapon) {
@@ -116,6 +136,15 @@ public class Member {
 	
 	public void setAccessorise(Item accessorise) {
 		this.accessorise = accessorise;
+	}
+	
+	public void levelUp() {
+		this.level ++;
+		this.atk +=3;
+		this.def +=1;
+		this.maxHp += 10;
+		this.hp = this.maxHp;
+		this.exp = 0;
 	}
 	
 }

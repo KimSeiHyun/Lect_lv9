@@ -6,11 +6,12 @@ import java.util.Scanner;
 
 public class FileManager {
 	
-	//public static FileManager instance = new FileManager();
+	
 	File moneyData = new File("Money");
 	File ShopData = new File("Shop");
 	File inventoryData = new File("Inventory");
 	File guildMemberData = new File("GuildMember");
+	File raidData = new File("Raid");
 	Scanner sc = new Scanner(System.in);
 	
 	private FileWriter fw = null;
@@ -19,6 +20,7 @@ public class FileManager {
 	private Shop shop = Shop.instance;
 	private Inventory inventory = Inventory.instance;
 	private Guild guild = Guild.instance;
+	private Raid raid = Raid.instance;
 	public void save() {
 		try {
 			fw = new FileWriter(moneyData);
@@ -53,6 +55,10 @@ public class FileManager {
 				fw.write(temp.getName()+"/"+temp.getLevel()+"/"+temp.getHp()+"/"+temp.getMaxHp()+"/"+temp.getAtk()+"/"+
 				temp.getDef()+"/"+temp.getExp()+"/"+temp.getParty()+"/"+temp.getWeapon()+"/"+temp.getArmor()+"/"+temp.getAccessorise()+"\n");
 			}
+			fw.close();
+			
+			fw = new FileWriter(raidData);
+			fw.write(this.raid.getLevel()+"/"+this.raid.getAtk()+"/"+this.raid.getDef()+"/"+this.raid.getHp()+"/"+this.raid.getMaxHp()+"\n");
 			fw.close();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -143,6 +149,23 @@ public class FileManager {
 			}
 			fr.close();
 			br.close();
+			
+			fr = new FileReader(raidData);
+			br = new BufferedReader(fr);
+			String data = br.readLine();
+			String temp2[] = data.split("/");
+			int temp[] = new int[temp2.length];
+			for(int i=0; i<temp.length; i++) {
+				temp[i] = Integer.parseInt(temp2[i]);
+			}
+			this.raid.setLevel(temp[0]);
+			this.raid.setAtk(temp[1]);
+			this.raid.setDef(temp[2]);
+			this.raid.setHp(temp[3]);
+			this.raid.setMaxHp(temp[4]);
+			fr.close();
+			br.close();
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

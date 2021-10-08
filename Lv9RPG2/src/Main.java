@@ -7,6 +7,7 @@ class MainGame {
 	private Shop shop = new Shop();
 	private Player player = new Player();
 	private Guild guild = new Guild();
+	private Raid raid = new Raid();
 	public void run( ) {
 		
 		while(true) {
@@ -28,13 +29,16 @@ class MainGame {
 				this.fm.load();
 			}
 			if(sel == 6) {
+				this.raid.raidManager();
+			}
+			if(sel == 7) {
 				break;
 			}
 		}
 	}
 	
 	public void MainMenuPrint() {
-		System.out.println("1.길드관리\n2.상점\n3.인벤토리\n4.저장\n5.로드\n6.종료");
+		System.out.println("1.길드관리\n2.상점\n3.인벤토리\n4.저장\n5.로드\n6.레이드\n7.종료");
 	}
 }
 public class Main {

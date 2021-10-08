@@ -3,7 +3,7 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Guild {
-	private int partyMember = 0;
+	public static int partyMember = 0;
 	private Inventory inventory = Inventory.instance;
 	Scanner sc = new Scanner(System.in);
 	Random rn = new Random();
@@ -37,6 +37,7 @@ public class Guild {
 		}
 	}
 	
+
 	public void guildMainMenuPrint() {
 		System.out.println("1.길드원목록\n2.길드원영입\n3.길드원추방\n4.파티원목록\n5.파티원추가\n6.파티원추방\n7.뒤로가기");
 	}
@@ -59,7 +60,6 @@ public class Guild {
 		int sel = sc.nextInt();
 		if(sel == 1) {
 			if(Player.money >= 10000) {
-				int asdasd = 0;
 				String name = "";
 				String nameTemp1[] = {"김" , "이" , "박" , "우" , "손" , "베" , "프" };
 				String nameTemp2[] = {"세" , "은" , "지" , "광" , "좌" , "짜" , "장" };
@@ -88,12 +88,13 @@ public class Guild {
 				int rHp = rn.nextInt(5)+5;
 				int hp = rHp*10;
 				int maxHp = rHp*10;
-				int atk = rn.nextInt(3)+1;
-				int def = rn.nextInt(3)+1;
+				int atk = rn.nextInt(6)+3;
+				int def = rn.nextInt(4)+2;
 				int exp = 0;
 				if(this.partyMember <4) {
 					this.member.add(new Member(name , level , hp , maxHp , atk , def , exp , true));
 					partyMember ++;
+					
 				}else {
 					this.member.add(new Member(name , level , hp , maxHp , atk , def , exp));
 				}
