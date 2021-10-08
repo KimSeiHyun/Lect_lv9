@@ -7,12 +7,13 @@ public class Raid {
 	public static Raid instance = new Raid();
 	private Guild guild = Guild.instance;
 	private Inventory inventory = Inventory.instance;
-	private int level = 1;
-	private int atk = 10;
-	private int def = 3;
-	private int hp = 100;
-	private int maxHp = 100;
+	public static int level = 1;
+	public static int atk = 10;
+	public static int def = 3;
+	public static int hp = 100;
+	public static int maxHp = 100;
 	
+
 	public int getLevel() {
 		return this.level;
 	}

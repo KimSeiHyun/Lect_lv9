@@ -59,6 +59,7 @@ public class FileManager {
 			
 			fw = new FileWriter(raidData);
 			fw.write(this.raid.getLevel()+"/"+this.raid.getAtk()+"/"+this.raid.getDef()+"/"+this.raid.getHp()+"/"+this.raid.getMaxHp()+"\n");
+			System.out.println("레이드 피통 : "+this.raid.getHp());
 			fw.close();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -162,7 +163,9 @@ public class FileManager {
 			this.raid.setAtk(temp[1]);
 			this.raid.setDef(temp[2]);
 			this.raid.setHp(temp[3]);
+			System.out.println("보스피통 : "+this.raid.getHp());
 			this.raid.setMaxHp(temp[4]);
+			System.out.println("ㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎ");
 			fr.close();
 			br.close();
 			
