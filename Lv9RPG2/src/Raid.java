@@ -136,7 +136,6 @@ public class Raid {
 								System.out.printf("%s의 레벨업!! \n",this.guild.member.get(partyMemberIdx[i]).getName());
 							}
 							if(this.guild.member.get(partyMemberIdx[i]).getLevel() < this.guild.member.get(partyMemberIdx[i]).getExp()) {
-								System.out.println("bbbbbbbbbbbbbbbbbbbbbbbbbbb");
 								while(this.guild.member.get(partyMemberIdx[i]).getLevel() < this.guild.member.get(partyMemberIdx[i]).getExp()) {
 									int tempExp = this.guild.member.get(partyMemberIdx[i]).getExp();
 									this.guild.member.get(partyMemberIdx[i]).levelUp();
@@ -242,11 +241,11 @@ public class Raid {
 		System.out.println("[2].획득 경험치는 보스의 레벨만큼 얻을 수 있으며 플레이어들의 레벨업 조건은 자기 자신의 레벨만큼 경험치를 얻으면 레벨업 됩니다.");
 		System.out.println("    ex) 플레이어의 1레벨에서 exp가 0일때 레이드보스 1단계를 잡으면 레벨2로 상승 . ");
 		System.out.println("[3].레이드를 더이상 진행하기 어려울때 레이드 초기화를 통해 레이드 보스를 1단계로 초기화 할 수 있습니다.");
-		System.out.println("[4].레이드 보스를 처치할시 50%확률로 상점에서 구입하지 못하는 아이템을 획득합니다 .  ");
+		System.out.println("[4].레이드 보스를 처치할시 25%확률로 상점에서 구입하지 못하는 아이템을 획득합니다 .  ");
 		System.out.println("[5].레이드는 최소 파티원1명 이상의 파티만 입장가능합니다.");
-		System.out.println("[6].레이드는 턴제로 이루어지며 1.공격 과 2.방어를 선택 할수 있습니다.");
-		System.out.println("    1.공격 = 파티원 모두의 공격 , 방어 선택이 끝나면 보스를 공격합니다.");
-		System.out.println("    2.방어 = 파티원 모두의 공격 , 방어 선택이 끝낫을때 공격을 하지않고 한턴동안 방어수치를 두배 올립니다.");
+		System.out.println("[6].레이드는 턴제로 이루어지며 공격과 방어를 선택 할수 있습니다.");
+		System.out.println("    1.공격 = 파티원 모두의 행동선택이 끝나면 보스를 공격합니다.");
+		System.out.println("    2.방어 = 파티원 모두의 행동선택이 끝낫을때 공격을 하지않고 한턴동안 방어수치를 두배 올립니다.");
 		System.out.println("--------------------------------------------");
 	}
 	public void raidBossReset() {
