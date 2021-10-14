@@ -1,7 +1,7 @@
 package models;
 
 interface Attackable {
-	public void attack();
+	public void attack(Unit target);
 }
 
 interface Criticalable {}
@@ -46,10 +46,22 @@ public class Unit implements Attackable , Criticalable {
 	public void setAddDef(int def) {
 		this.def += def;
 	}
+	public void setMinusHp(int atk) {
+		this.hp -= atk;
+	}
+	public void setPlusHp(int hp) {
+		this.hp += hp;
+	}
+	public void setAddFloor() {
+		this.floor ++;
+	}
 
 	@Override
-	public void attack() {
-		// TODO Auto-generated method stub
+	public void attack(Unit target) {
+		if(this.atk > target.def) {
+			System.out.printf("%s의 공격 !! %s는 %d의 데미지를 입었다!!\n",this.name , target.name , (this.atk-target.def));
+			target.setMinusHp((this.atk-target.def));
+		}else System.out.println("흠집조차 나지 않았따..");
 		
 	}
 	

@@ -16,7 +16,7 @@ public class GameManager extends Shop{
 	ArrayList<Unit> unit = new ArrayList<>();
 	Scanner sc = new Scanner(System.in);
 	private Hero hero = null;
-	
+	private int dethCheck = 0;
 	public void run() {
 		setting();
 //		for(int i=0; i<unit.size(); i++) {
@@ -26,7 +26,8 @@ public class GameManager extends Shop{
 			this.mainMenuPrint();
 			int sel = sc.nextInt();
 			if(sel == 1) {
-				
+				this.play();
+				if(dethCheck == 1) break;
 			}
 			if(sel == 2) {
 				this.dungeonInformation();
@@ -38,24 +39,60 @@ public class GameManager extends Shop{
 				this.menualPrint();
 			}
 			if(sel == 5) {
-				this.unit.clear();
-				this.setting();
-				this.hero.reset();
+				this.reset();
 			}
  			
 		}
 	}
 	
-	public void ex () {
-		
+	private void play () {
+		int floor = this.hero.getFloor()-1;
+		while(true) {
+			this.playPrint();
+			int sel = sc.nextInt();
+			if(sel == 1) {
+				this.hero.attack(this.unit.get(floor));;
+				if(this.unit.get(floor).getHp() <= 0) {
+					System.out.printf("%s를 쓰러뜨렸다!! 30골드 획득!!\n",this.unit.get(floor).getName());
+					if(this.hero.getFloor()%3 == 0) {
+						this.hero.setAddPortion();
+					}
+					this.hero.setAddFloor();
+					this.hero.setAddMoney();
+					break;
+				}
+				this.unit.get(floor).attack(hero);
+				this.dethCheck();
+				if(this.dethCheck == 1) break;
+			}
+			if(sel == 2) {
+				this.hero.drink();
+			}
+
+		}
+	}
+	
+	private void playPrint() {
+		int floor = this.hero.getFloor()-1;
+		System.out.printf("[%s]\t[체력 : %d]\t[공격력 : %d]\t[방어력 : %d]\t[보유포션 : %d]\n",this.hero.getName() , this.hero.getHp() , this.hero.getAtk() , this.hero.getDef() , this.hero.getPortion());
+		System.out.printf("[%s]\t[체력 : %d]\t[공격력 : %d]\t[방어력 : %d]\n",this.unit.get(floor).getName() , this.unit.get(floor).getHp() , this.unit.get(floor).getAtk() , this.unit.get(floor).getDef());
+		System.out.println("1.공격     2.포션사용   ");
+	}
+	
+	private void dethCheck() {
+		if(this.hero.getHp() <= 0) {
+			System.out.println("player 사망 .. ");
+			this.dethCheck = 1;
+		}
 	}
 	public static GameManager getInstance() {
 		return instance;
 	}
+
 	
 	private void setting() {
-		hero = new Hero("김세현" , 150 , 5 , 3 , 1);
-		unit.add(new Zombie("이병좀비",30 , 8 , 2, 1));
+		hero = new Hero("김세현" , 150 , 7 , 3 , 1);
+		unit.add(new Zombie("이병좀비",30 , 999 , 2, 1));
 		unit.add(new Zombie("일병좀비",50 , 11 , 3, 2));
 		unit.add(new Zombie("상병좀비",70 , 14 , 4, 3));
 		unit.add(new Zombie("병장좀비",90 , 17 , 5, 4));
@@ -80,7 +117,7 @@ public class GameManager extends Shop{
 	private void menualPrint() {
 		System.out.println("---------------메뉴얼-----------------");
 		System.out.println("1.던전입장을 하면 플레이어는 공격 , 방어 , 물약사용 세가지 중에 선택을 할 수 있습니다.");
-		System.out.println("2.물약은 처음에 5개 소지하고 있으며 5층마다 1개씩 추가로 지급됩니다.");
+		System.out.println("2.물약은 처음에 5개 소지하고 있으며 3층마다 1개씩 추가로 지급됩니다.");
 		System.out.println("3.물약을 사용하면 현재층 x 20만큼 회복됩니다.");
 		System.out.println("4.던전을 클리어하면 골드를 얻으며 플레이어의 입맛대로 스텟을 구매할 수 있습니다.");
 		System.out.println("5.던전정보 메뉴를 통해 현재 층의 몬스터의 정보를 획득 할 수 있습니다.");
@@ -90,8 +127,15 @@ public class GameManager extends Shop{
 	}
 	
 	private void dungeonInformation() {
-		System.out.printf("[%s]\n체력 : %d\n공격력 : %d\n방어력 : %d\n현재층수 : %d\n남은포션 : %d\n보유골드 : %d\n",this.hero.getName() , this.hero.getHp(), this.hero.getAtk() , this.hero.getDef() , this.hero.getFloor() , this.hero.getPortion(), this.hero.getMoney());
-		this.hero.getFloor();
+		System.out.println("~~~player~~~");
+		System.out.printf("[%s]\n체력 : %d\n공격력 : %d\n방어력 : %d\n현재층수 : %d\n남은포션 : %d\n보유골드 : %d\n",
+				this.hero.getName() , this.hero.getHp(), this.hero.getAtk() , this.hero.getDef() , 
+				this.hero.getFloor() , this.hero.getPortion(), this.hero.getMoney());
+		System.out.println("~~~~zombie~~~");
+		System.out.printf("[%s]\n체력 : %d\n공격력 : %d\n방어력 : %d\n",
+				this.unit.get(this.hero.getFloor()-1).getName(),this.unit.get(this.hero.getFloor()-1).getHp(),
+				this.unit.get(this.hero.getFloor()-1).getAtk(),this.unit.get(this.hero.getFloor()-1).getDef());
+		System.out.println("~~~~~~~~~~~~~");
 	}
 	
 	private void Shop() {
@@ -124,7 +168,13 @@ public class GameManager extends Shop{
 		System.out.printf("3.DEF\t%d\t   %d\n",this.getDef(),this.getPrice());
 		System.out.println("보유머니 : " +this.hero.getMoney());
 	}
-
+	
+	private void reset() {
+		this.unit.clear();
+		this.setting();
+		this.hero.reset();
+		System.out.println("게임이 리셋되었습니다.");
+	}
 
 
 	

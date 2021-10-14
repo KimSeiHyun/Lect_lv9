@@ -13,12 +13,15 @@ public class Hero extends Unit implements Attackable {
 	public int getMoney() {
 		return this.money;
 	}
-	
 	public void setAddPortion() {
 		this.portion ++;
+		System.out.println("(포션을 한개 획득했다 . )");
 	}
 	public void setMinusPortion() {
 		this.portion --;
+	}
+	public void setAddFloor() {
+		super.setAddFloor();
 	}
 	
 	public void setAddMoney() {
@@ -43,10 +46,20 @@ public class Hero extends Unit implements Attackable {
 		this.money = 0;
 	}
 	
-	@Override
-	public void attack() {
-		// TODO Auto-generated method stub
+	public void attack(Unit target) {
+		if(super.getAtk() > target.getDef()) {
+			System.out.printf("%s의 공격 !! %s는 %d의 데미지를 입었다!!\n",super.getName(), target.getName() ,(super.getAtk()-target.getDef()) );
+			target.setMinusHp((super.getAtk()-target.getDef()));
+		}else System.out.println("흠집조차 나지 않았다...");
 		
+	}
+	
+	public void drink() {
+		if(this.portion != 0 ) {
+			System.out.printf("물약을 사용했다 . Hp 가 %d만큼 회복됬다 . \n",this.getFloor()*20);			
+			this.setPlusHp(this.getFloor()*20);
+			this.portion --;
+		}else System.out.println("물약이 다 떨어졋다 ..");
 	}
 	
 
