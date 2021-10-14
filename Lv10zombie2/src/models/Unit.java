@@ -12,7 +12,7 @@ public class Unit implements Attackable , Criticalable {
 	private int atk;
 	private int def;
 	private int floor;
-	
+	private int cnt = 0;
 	public Unit(String name , int hp , int atk , int def , int floor) {
 		this.name = name;
 		this.hp = hp;
@@ -58,11 +58,31 @@ public class Unit implements Attackable , Criticalable {
 
 	@Override
 	public void attack(Unit target) {
-		if(this.atk > target.def) {
-			System.out.printf("%s의 공격 !! %s는 %d의 데미지를 입었다!!\n",this.name , target.name , (this.atk-target.def));
-			target.setMinusHp((this.atk-target.def));
-		}else System.out.println("흠집조차 나지 않았따..");
+		if(this.floor == 10) {
+			if(this.atk > target.def) {
+				if(cnt != 4) {
+					System.out.println("공격 카운트 : " + cnt);
+					System.out.printf("%s의 공격 !! %s는 %d의 데미지를 입었다!!\n",this.name , target.name , (this.atk-target.def));
+					target.setMinusHp((this.atk-target.def));			
+					this.cnt ++;
+				}else {
+					System.out.println("공격 카운트 : " + cnt);
+					critical(target , target);
+					this.cnt = 0;
+				}
+			}else System.out.println("흠집조차 나지 않았따..");
+		}else {
+			if(this.atk > target.def) {
+				System.out.printf("%s의 공격 !! %s는 %d의 데미지를 입었다!!\n",this.name , target.name , (this.atk-target.def));
+				target.setMinusHp((this.atk-target.def));
+			}else System.out.println("흠집조차 나지 않았따..");
+		}
 		
+	}
+	
+	public void critical(Criticalable criticalable , Unit target) {
+		System.out.printf("%s의 크리티컬 공격 !! %s는 %d의 데미지를 입었다!!\n",this.name , target.name , (this.atk*2-target.def));
+		target.setMinusHp((this.atk*2-target.def));	
 	}
 	
 	

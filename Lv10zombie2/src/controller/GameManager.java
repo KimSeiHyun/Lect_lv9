@@ -92,7 +92,7 @@ public class GameManager extends Shop{
 	
 	private void setting() {
 		hero = new Hero("김세현" , 150 , 7 , 3 , 1);
-		unit.add(new Zombie("이병좀비",30 , 999 , 2, 1));
+		unit.add(new Zombie("이병좀비",30 , 8 , 2, 1));
 		unit.add(new Zombie("일병좀비",50 , 11 , 3, 2));
 		unit.add(new Zombie("상병좀비",70 , 14 , 4, 3));
 		unit.add(new Zombie("병장좀비",90 , 17 , 5, 4));
@@ -122,7 +122,7 @@ public class GameManager extends Shop{
 		System.out.println("4.던전을 클리어하면 골드를 얻으며 플레이어의 입맛대로 스텟을 구매할 수 있습니다.");
 		System.out.println("5.던전정보 메뉴를 통해 현재 층의 몬스터의 정보를 획득 할 수 있습니다.");
 		System.out.println("6.처음부터를 하면 모든 데이터가 초기화됩니다.");
-		System.out.println("7.마지막층(10층)의 좀비는 특별한 능력을 사용합니다 . ");
+		System.out.println("7.마지막층(10층)의 좀비는 크리티컬 공격을 합니다 . ");
 		System.out.println("-----------------------------------");
 	}
 	
