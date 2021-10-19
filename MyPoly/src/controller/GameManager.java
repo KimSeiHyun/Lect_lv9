@@ -28,6 +28,7 @@ public class GameManager {
 			}
 			if(sel == 3) {
 				System.out.println("게임을 종료합니다 . ");
+				System.out.println("현재 스테이지 : " +StageBattle.stageLevel);
 				break;
 			}
 		}
