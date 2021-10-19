@@ -137,6 +137,7 @@ public class StageBattle extends Stage{
 				this.um.unit.get(i).attack(this.um.player.get(playerIdx));
 			}
 			this.playerDieCheck();
+			if(this.um.player.size() == 0 ) break;
 		}
 	}
 	
