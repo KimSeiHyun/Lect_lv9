@@ -10,6 +10,7 @@ public class StageBattle extends Stage{
 	Scanner sc = new Scanner(System.in);
 	Random rn = new Random();
 	private UnitManager um = UnitManager.getUnitManagerinstance();
+	public static int batCount = -1;
 	
 	public static StageBattle getStageBattleInstance() {
 		return StageBattle.instance;
@@ -43,6 +44,12 @@ public class StageBattle extends Stage{
 		int x = 0;
 		this.menu();
 		while(x < this.um.player.size()) {
+			if(x == this.batCount) {
+				System.out.printf("%s는 기절상태입니다.\n",this.um.player.get(x).getName());
+				x ++;
+				this.batCount = -1;
+				continue;
+			}
 			System.out.printf("%s가 취할 행동을 선택해주세요 ! \n",this.um.player.get(x).getName());
 			System.out.println("[1.공격]   [2.스킬]  [3.스킬정보]");
 			int sel = sc.nextInt();
@@ -68,7 +75,10 @@ public class StageBattle extends Stage{
 			if(sel == 3) {
 				this.skillInformation(x);
 			}
-			if(um.unit.size() == 0) break;
+			if(um.unit.size() == 0) {
+				this.mpRecover();
+				break;
+			}
 		}
 		
 	}
@@ -99,12 +109,44 @@ public class StageBattle extends Stage{
 	
 	private void mpRecover() {
 		for(int i=0; i<this.um.player.size(); i++) {
-			
+			if(this.um.player.get(i).getMp() <= this.um.player.get(i).getMaxMp()/2) {
+				this.um.player.get(i).setMp((this.um.player.get(i).getMp()+this.um.player.get(i).getMaxMp()/2));
+			}else {
+				this.um.player.get(i).setOverMp();
+			}
 		}
 	}
 	
 	public void monsterTurn() {
-		
+		for(int i=0; i<this.um.unit.size(); i++) {
+			int playerIdx = rn.nextInt(this.um.player.size());
+			if(this.um.unit.get(i).getHp() <= this.um.unit.get(i).getMaxHp()/2 && this.um.unit.get(i).getMp() != 0) {
+				if(this.um.unit.get(i).getName().equals("박쥐")) {
+					UnitBat.skillBat((SkillBat) this.um.unit.get(i) , this.um.unit.get(i) , this.um.player.get(playerIdx) , playerIdx);					
+				}
+				if(this.um.unit.get(i).getName().equals("오크")) {
+					UnitOrc.skillOrc((SkillOrc) this.um.unit.get(i), this.um.unit.get(i) , this.um.player.get(playerIdx));
+				}
+				if(this.um.unit.get(i).getName().equals("울프")) {
+					for(int j=0; j<this.um.player.size(); j++) {
+						UnitWolf.skillWolf((SkillWolf) this.um.unit.get(i), this.um.unit.get(i) , this.um.player.get(j));						
+					}
+				}
+				this.um.unit.get(i).setMinusMp();
+			}else {
+				this.um.unit.get(i).attack(this.um.player.get(playerIdx));
+			}
+			this.playerDieCheck();
+		}
+	}
+	
+	private void playerDieCheck() {
+		for(int i=0; i<this.um.player.size(); i++) {
+			if(this.um.player.get(i).getHp() <= 0) {
+				System.out.printf("%s는 사망했다 .. \n" , this.um.player.get(i).getName());
+				this.um.player.remove(i);
+			}
+		}
 	}
 	
 
