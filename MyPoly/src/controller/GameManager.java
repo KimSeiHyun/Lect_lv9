@@ -2,6 +2,7 @@ package controller;
 
 import java.util.Scanner;
 
+import models.StageBattle;
 import models.StageTitle;
 
 public class GameManager {
@@ -13,6 +14,10 @@ public class GameManager {
 		um.monsterInit();
 		um.playerInit();
 		while(true) {
+			if(um.player.size() == 0) {
+				System.out.println("최고 스테이지 : " +StageBattle.stageLevel);
+				break;
+			}
 			st.menu();
 			int sel = sc.nextInt();
 			if(sel == 1) {

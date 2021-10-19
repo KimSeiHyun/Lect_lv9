@@ -17,6 +17,7 @@ public class StageManager {
 	
 	public void stageRun() {
 		while(true) {
+			if(um.player.size() == 0) break;
 			sb.playerTurn();
 			sb.monsterTurn();
 			if(um.unit.size() == 0) {
@@ -25,6 +26,7 @@ public class StageManager {
 				break;
 			}
 		}
+		
 		
 	}
 	
