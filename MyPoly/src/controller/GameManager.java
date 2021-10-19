@@ -27,7 +27,7 @@ public class GameManager {
 				st.GameMenual();
 			}
 			if(sel == 3) {
-				System.out.println("종료합니다.");
+				System.out.println("게임을 종료합니다 . ");
 				break;
 			}
 		}
