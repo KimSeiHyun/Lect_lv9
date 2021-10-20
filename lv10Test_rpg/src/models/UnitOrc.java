@@ -1,5 +1,5 @@
 package models;
-
+//
 interface SkillOrc {}
 public class UnitOrc extends Unit implements SkillOrc{
 

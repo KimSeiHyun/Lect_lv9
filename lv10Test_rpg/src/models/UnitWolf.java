@@ -1,5 +1,5 @@
 package models;
-
+//
 interface SkillWolf {}
 public class UnitWolf extends Unit implements SkillWolf{
 

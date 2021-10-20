@@ -1,5 +1,5 @@
 package models;
-
+//
 public class Raid {
 	private int level;
 	private int hp;
