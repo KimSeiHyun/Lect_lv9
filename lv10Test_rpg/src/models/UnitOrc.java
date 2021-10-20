@@ -8,8 +8,10 @@ public class UnitOrc extends Unit implements SkillOrc{
 		// TODO Auto-generated constructor stub
 	}
 	
-	public static void SkillOrc() {
-		
+	public static void SkillOrc(SkillOrc skillorc ,Unit unit ,  Member member) {
+		int damage = (unit.getAtk()*3-member.getDef());
+		System.out.printf("%s의 내려찍기!! %s는 %d의 데미지를 입었다.\n",unit.getName() , member.getName(), damage);
+		member.setHp((member.getHp()-damage));
 	}
 	
 }

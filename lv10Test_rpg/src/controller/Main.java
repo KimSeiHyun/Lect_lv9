@@ -12,6 +12,7 @@ public class Main {
 		GuildManager gm = new GuildManager();
 		ItemManager im = new ItemManager();
 		im.itemInit();
+		dm.UnitInit();
 		while(true) { 
 			System.out.println("--- Dungeon RPG --- ");
 			System.out.println("[1.길드관리]  [2.던전입장]  [3.상점]");

@@ -17,12 +17,14 @@ public class GuildManager {
 	}
 	public static ArrayList<Member> member = new ArrayList<>();
 	
-	private int partyCount = 0;
+	public static int partyCount = 0;
 	private String nameArray1[] = {"김" , "이" , "짜" ,"장" , "면" , "탕" , "수" ,"육"};
 	private String nameArray2[] = {"볶" , "음" , "밥" ,"짬" , "뽕" , "라" , "조" ,"기"};
 	private String nameArray3[] = {"프" , "링" , "글" ,"스" , "아" , "주" , "최" ,"고"};
 	Scanner sc = new Scanner(System.in);
 	Random rn = new Random();
+	
+
 	public void guildManageRun() {
 		while(true) {
 			System.out.println("현재 보유 골드 : " +Player.money);
@@ -59,7 +61,7 @@ public class GuildManager {
 		System.out.println("1.길드원목록\n2.길드원영입(money -10,000)\n3.길드원판매(money +5,000)\n4.파티리스트\n5.파티추가\n6.파티추방\n7.파티원치료(money - 5,000)\n8.뒤로가기");
 	}
 	
-	private void guildMemberPrint() {
+	public void guildMemberPrint() {
 		System.out.println("---길드원리스트---");
 		if(this.member.size() != 0) {
 			System.out.println("번호\t이름\t레벨\t체력\t공격력\t방어력\t경험치\t파티");
@@ -77,7 +79,7 @@ public class GuildManager {
 			name += this.nameArray3[rn.nextInt(this.nameArray1.length)];
 			int level = 1;
 			int hp = rn.nextInt(10)+80;
-			int atk = rn.nextInt(3)+5;
+			int atk = rn.nextInt(5)+7;
 			int def = rn.nextInt(3)+1;
 			int exp = 0;
 			Member temp = new Member(name , level , hp , atk , def , exp);
@@ -141,7 +143,7 @@ public class GuildManager {
 		}else System.out.println("판매할 길드원이 없습니다.");
 	}
 	
-	private void partyListPrint() {
+	public void partyListPrint() {
 		if(this.partyCount != 0) {
 			System.out.println("번호\t이름\t레벨\t체력\t공격력\t방어력\t경험치\t파티");
 			for(int i=0; i<this.member.size(); i++) {
@@ -180,7 +182,7 @@ public class GuildManager {
 			}
 			int idx = sc.nextInt();
 			if(idx >= 0 && idx < this.member.size() && this.member.get(idx).getParty() == true) {
-				this.partyCount ++;
+				this.partyCount --;
 				this.member.get(idx).setParty(false);
 				System.out.printf("%s가 파티에서 추방됐습니다..\n",this.member.get(idx).getName());
 			}else System.out.println("번호를 다시 확인해주세요 . ");

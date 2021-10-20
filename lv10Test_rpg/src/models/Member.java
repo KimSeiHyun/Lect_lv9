@@ -34,7 +34,13 @@ public class Member {
 		this.party = party;
 	}
 	
-	
+	public void levelUp() {
+		this.level ++;
+		this.maxHp += 10;
+		this.hp = maxHp;
+		this.atk += 3;
+		this.def ++;
+	}
 	public String getName() {
 		return this.name;
 	}
@@ -69,10 +75,31 @@ public class Member {
 		return this.accessorise;
 	}
 	
+	public void setAtk(int atk) {
+		this.atk = atk;
+	}
+	public void setDef(int def) {
+		this.def = def;
+	}
 	public void setHp(int hp) {
 		this.hp = hp;
 	}
+	public void setMaxHp(int maxHp) {
+		this.maxHp = maxHp;
+	}
 	public void setParty(boolean party) {
 		this.party = party;
+	}
+	public void setExp(int exp) {
+		this.exp = exp;
+	}
+	public void setWeapon(Inventory weapon) {
+		this.weapon = weapon;
+	}
+	public void setArmor(Inventory armor) {
+		this.armor = armor;
+	}
+	public void setAccessorise(Inventory accessorise) {
+		this.accessorise = accessorise;
 	}
 }
