@@ -2,6 +2,6 @@ package models;
 
 public class Player {
 	
-	static int money = 100000;
+	public static int money = 100000;
 	
 }
