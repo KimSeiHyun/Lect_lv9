@@ -52,7 +52,5 @@ public class Unit {
 		int damage = (this.atk-member.getDef());
 		System.out.printf("%s의 공격!! %s는 %d의 데미지를 입었다.\n",this.name , member.getName(), damage);
 		member.setHp((member.getHp()-damage));
-		
-		
 	}
 }

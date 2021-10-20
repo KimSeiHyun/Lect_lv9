@@ -20,6 +20,7 @@ public class DungeonManager extends Dungeon {
 	}
 	
 	private GuildManager gm = GuildManager.getGuildManagerInstance();
+	private ItemManager im = ItemManager.getItemManagerInstance();
 	private ArrayList<Unit> unit = new ArrayList<>();
 	private Raid raid = null;
 	private int dungeonLevel = 1;
@@ -146,6 +147,7 @@ public class DungeonManager extends Dungeon {
 						break;
 					}
 					//몬스터들의 공격 
+					int dethCheck = -1;
 					for(int i=0; i<this.unit.size(); i++) {
 						int r = rn.nextInt(this.partyIdx.length);
 						int memberIdx = this.partyIdx[r];
@@ -157,17 +159,60 @@ public class DungeonManager extends Dungeon {
 							}else {
 								//스킬사용
 								if(this.unit.get(i).getName().equals("박쥐")) {
-									UnitBat.skillBat((SkillBat) this.unit.get(i), this.unit.get(i), this.gm.member.get(memberIdx));
+									UnitBat.skillBat( this.unit.get(i), this.gm.member.get(memberIdx));
 								}
 								if(this.unit.get(i).getName().equals("오크")) {
-									
+									UnitOrc.SkillOrc(this.unit.get(i), this.gm.member.get(memberIdx));
 								}
 								if(this.unit.get(i).getName().equals("울프")) {
+									UnitWolf.SKillWolf(this.unit.get(i), this.gm.member.get(memberIdx));
 									
 								}
 								this.unit.get(i).setMp();
 							}
 						}
+						if(this.gm.member.get(memberIdx).getHp() <= 0) {
+							//아이템을 착용하고 있을 경우 
+							if(gm.member.get(memberIdx).getWeapon() != null) { //
+								Inventory tempItem = gm.member.get(memberIdx).getWeapon(); // 삭제할 길드원의 착용중인 아이템
+								for(int j=0; j<this.im.inventory.size(); j++) {
+									if(this.im.inventory.get(j).getName().equals(tempItem.getName())) {
+										this.im.inventory.get(j).setUse(false);
+										this.im.inventory.get(j).setUserName(null);
+									}
+								}
+							}
+							if(gm.member.get(memberIdx).getArmor() != null) { //
+								Inventory tempItem = gm.member.get(memberIdx).getArmor(); // 삭제할 길드원의 착용중인 아이템
+								for(int j=0; j<this.im.inventory.size(); j++) {
+									if(this.im.inventory.get(j).getName().equals(tempItem.getName())) {
+										this.im.inventory.get(j).setUse(false);
+										this.im.inventory.get(j).setUserName(null);
+									}
+								}
+							}
+							if(gm.member.get(memberIdx).getAccessorise() != null) { //
+								Inventory tempItem = gm.member.get(memberIdx).getAccessorise(); // 삭제할 길드원의 착용중인 아이템
+								for(int j=0; j<this.im.inventory.size(); j++) {
+									if(this.im.inventory.get(j).getName().equals(tempItem.getName())) {
+										this.im.inventory.get(j).setUse(false);
+										this.im.inventory.get(j).setUserName(null);
+									}
+								}
+							}
+							gm.partyCount --;
+							System.out.printf("%s의 사망 .. \n",this.gm.member.get(memberIdx).getName());
+							gm.member.remove(memberIdx);
+							if(this.gm.member.size() ==0) {
+								dethCheck = 1;
+								break;
+							}
+							this.partyIdxInit();
+						}
+					}
+					if(dethCheck == 1) {
+						System.out.println("파티원전원이 사망했다 .. ");
+						break;
 					}
 					
 				}//while(True)
@@ -213,6 +258,57 @@ public class DungeonManager extends Dungeon {
 					if(run == 0) {
 						System.out.println("도망갑니다....");
 						break;
+					}
+					//보스의 공격 
+					int dethCheck = -1;
+					int r = rn.nextInt(this.partyIdx.length);
+					int memberIdx = this.partyIdx[r];
+					if(this.raid.getHp() <= this.raid.getMaxHp()/2) {
+						if(this.raid.getCount() == 0) {
+							this.raid.skillMeteor( this.gm.member.get(memberIdx));
+						}else {
+							this.raid.attack(this.gm.member.get(memberIdx));
+						}
+					}else {
+						this.raid.attack(this.gm.member.get(memberIdx));
+					}
+					if(this.gm.member.get(memberIdx).getHp() <= 0) {
+						//아이템을 착용하고 있을 경우 
+						if(gm.member.get(memberIdx).getWeapon() != null) { //
+							Inventory tempItem = gm.member.get(memberIdx).getWeapon(); // 삭제할 길드원의 착용중인 아이템
+							for(int j=0; j<this.im.inventory.size(); j++) {
+								if(this.im.inventory.get(j).getName().equals(tempItem.getName())) {
+									this.im.inventory.get(j).setUse(false);
+									this.im.inventory.get(j).setUserName(null);
+								}
+							}
+						}
+						if(gm.member.get(memberIdx).getArmor() != null) { //
+							Inventory tempItem = gm.member.get(memberIdx).getArmor(); // 삭제할 길드원의 착용중인 아이템
+							for(int j=0; j<this.im.inventory.size(); j++) {
+								if(this.im.inventory.get(j).getName().equals(tempItem.getName())) {
+									this.im.inventory.get(j).setUse(false);
+									this.im.inventory.get(j).setUserName(null);
+								}
+							}
+						}
+						if(gm.member.get(memberIdx).getAccessorise() != null) { //
+							Inventory tempItem = gm.member.get(memberIdx).getAccessorise(); // 삭제할 길드원의 착용중인 아이템
+							for(int j=0; j<this.im.inventory.size(); j++) {
+								if(this.im.inventory.get(j).getName().equals(tempItem.getName())) {
+									this.im.inventory.get(j).setUse(false);
+									this.im.inventory.get(j).setUserName(null);
+								}
+							}
+						}
+						gm.partyCount --;
+						System.out.printf("%s의 사망 .. \n",this.gm.member.get(memberIdx).getName());
+						gm.member.remove(memberIdx);
+						if(this.gm.member.size() ==0) {
+							dethCheck = 1;
+							break;
+						}
+						this.partyIdxInit();
 					}
 				}
 			}
@@ -269,7 +365,7 @@ public class DungeonManager extends Dungeon {
 		System.out.println("1.던전을 클리어하면 경험치와 골드를 얻습니다.");
 		System.out.println("2.던전을 클리어하기 어려울시 초기화를 통해 던전의 레벨을 1로 만들 수 있습니다.");
 		System.out.println("3.던전은 플레이도중 25%확률로 도망가기를 할 수 있습니다.");
-		System.out.println("4.몬스터들은 체력이50%이하로 내려가면 스킬을 한번 사용하며 보스는 일정 공격턴마다 전체공격을 합니다 .");
+		System.out.println("4.몬스터들은 체력이50%이하로 내려가면 스킬을 한번 사용합니다.");
 		System.out.println("5.던전레벨이 5의 배수일때는 보스가 출현합니다 . ");
 		System.out.println("6.파티원들은 경험치를 자신의 레벨 x10만큼 회득하면 레벨업 하며 스텟이 조금 상승하고 hp가 모두 회복됩니다.");
 		System.out.println("7.던전클리어시 던전의 레벨 *1000만큼 골드를 획득합니다 . ");
