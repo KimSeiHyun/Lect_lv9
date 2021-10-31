@@ -3,6 +3,7 @@ package basic;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Calendar;
 import java.util.Random;
 
 import javax.swing.Action;
@@ -11,6 +12,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+// 타이머 관련 클래스는 green 프로젝트에 lv10 패키지에 Ex001_001,2를 참조 . 
 class AlertFrame1to50 extends JFrame {
 	
 	JLabel clearText = new JLabel();
@@ -41,6 +43,27 @@ class Content1to50 extends JPanel implements ActionListener{
 	private int min;
 	private int sec;
 	private int ms;
+	
+	public int getMin() {
+		return this.min;
+	}
+	public int getSec() {
+		return this.sec;
+	}
+	public int getMs() {
+		return this.ms;
+	}
+	
+	public void setMin(int min) {
+		this.min = min;
+	}
+	public void setSec(int sec) {
+		this.sec = sec;
+	}
+	public void setMs(int ms) {
+		this.ms = ms;
+	}
+	
 	public Content1to50() {
 		setLayout(null);
 		setBounds(0,0,800,800);
@@ -54,15 +77,25 @@ class Content1to50 extends JPanel implements ActionListener{
 	}
 	
 	private void setTimer() {
-		this.timer.setBounds(0,0,200,100);
-		this.timer.setText(String.format("%2d, %2d, %3d\n",this.min , this.sec , this.ms));
+		this.timer.setBounds(0,0,300,100);
+		this.timer.setText(String.format("%2d, %2d, %3d  cnt : %d\n",this.min , this.sec , this.ms,this.cnt));
 		add(this.timer);
 		
 	}
 	
 	public void setTime() {
-		
+		this.ms ++;
+		if(this.ms == 10) {
+			this.sec ++;
+			this.ms = 0;
+		}
+		if(this.sec == 60) {
+			this.min ++;
+			this.sec = 0;
+		}
+		this.timer.setText(String.format("%2d분, %2d초, %3d밀리초   cnt : %d\n",this.min , this.sec , this.ms , this.cnt));
 	}
+	
 	private void setResetButton() {
 		this.reset.setText("RESET");
 		this.reset.setBounds(20,250,100,50);
@@ -81,6 +114,9 @@ class Content1to50 extends JPanel implements ActionListener{
 				this.map[i][j].setText(this.front[i][j]+"");
 			}
 		}
+		this.min = 0;
+		this.sec = 0;
+		this.ms = 0;
 	}
 	private void setHeader() {
 		JLabel head = new JLabel("1 to 50");
@@ -92,6 +128,7 @@ class Content1to50 extends JPanel implements ActionListener{
 	}
 	
 	private void setMap() {
+		JButton temp = new JButton();
 		int y = 150;
 		for(int i=0; i<SIZE; i++) {
 			int x = 150;
@@ -107,6 +144,7 @@ class Content1to50 extends JPanel implements ActionListener{
 			}
 			y += 100;
 		}
+
 	}
 	
 	@Override
@@ -214,7 +252,7 @@ class One extends JFrame {
 		revalidate();
 		
 	}
-	public void setWatchTime(int n) {
+	public void setWatchTime() {
 		content.setTime();
 	}
 	
@@ -225,16 +263,30 @@ public class Ex1to50 {
 
 	public static void main(String[] args) {
 		One one = new One();
-		
-		int n = 0;
+//		int min = 0;
+//		int sec = 0;
+//		int ms = 0;
 		while(true) {
+//			Calendar calendar = Calendar.getInstance();
+//			long time = calendar.getTimeInMillis();
+			// 실시간으로 시간을 받지않고 변수들을 0부터 증가시키는 식으로 함 . 
 			try {
 				
-				Thread.sleep(100);
+				Thread.sleep(100); // 100 = 0.1초마다 작동  , 1000 = 1초마다 작동
 			} catch (Exception e) {
 				// TODO: handle exception
 			}
-			one.setWatchTime(n);
+//			ms ++;
+//			if(ms == 10) {
+//				sec ++;
+//				ms = 0;
+//			}
+//			if(sec == 60) {
+//				min ++;
+//				sec = 0;
+//			}
+			one.setWatchTime();
+			
 		}
 	}
 
