@@ -11,7 +11,7 @@ class SnakePanel extends MyUtil {
 	private Rect[] snake;
 	
 	public SnakePanel() {
-		
+		//
 	}
 }
 public class Game extends JFrame{

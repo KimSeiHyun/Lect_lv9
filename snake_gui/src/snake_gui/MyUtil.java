@@ -10,7 +10,7 @@ import java.awt.event.MouseMotionListener;
 import javax.swing.JPanel;
 
 class MyUtil extends JPanel implements ActionListener , MouseListener , KeyListener , MouseMotionListener {
-
+//
 	@Override
 	public void keyTyped(KeyEvent e) {
 		// TODO Auto-generated method stub

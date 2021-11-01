@@ -2,7 +2,7 @@ package snake_gui;
 
 import java.awt.Color;
 public class Rect {
-	
+	//
 	private int x , y , width , height;
 	private Color c;
 	
