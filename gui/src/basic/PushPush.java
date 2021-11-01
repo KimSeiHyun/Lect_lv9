@@ -5,9 +5,12 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.event.MenuKeyListener;
 
 class Square {
 	int x , y , width , height;
@@ -30,16 +33,17 @@ class Nemo2 {
 		this.height = height;
 	}
 }
-class ClickNemo extends JPanel implements MouseListener{
+class ClickNemo extends JPanel implements MouseListener , KeyListener{
 	
-	
+
 	Nemo2 nemo[] = new Nemo2[4];
 	Square square[] = new Square[2];
 	public ClickNemo() {
 		setLayout(null);
 		setBounds(0,0,1200,800);
 		setBackground(Color.pink);
-		
+		setFocusable(true);
+		addKeyListener(this);
 		addMouseListener(this);
 		setNemo();
 	}
@@ -78,7 +82,7 @@ class ClickNemo extends JPanel implements MouseListener{
 	}
 	@Override
 	public void mouseClicked(MouseEvent e) { //클릭! 발생시
-
+		
 	}
 
 	@Override
@@ -86,7 +90,7 @@ class ClickNemo extends JPanel implements MouseListener{
 		//클릭이 발생한 지점의 좌표를 가져온다.
 		int x = e.getX();
 		int y = e.getY();
-
+		
 		if(x >= this.nemo[0].x && x <this.nemo[0].x+this.nemo[0].width && y >= this.nemo[0].y && y < this.nemo[0].y+this.nemo[0].height ) {
 			System.out.println("업");
 			this.square[0].y -=2;
@@ -140,6 +144,62 @@ class ClickNemo extends JPanel implements MouseListener{
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		//상 하 좌 우  38  40  37  39
+		if(e.getKeyCode() == 38) {
+			System.out.println("업");
+			this.square[0].y -=2;
+			if(this.square[0].y - this.square[0].height == this.square[1].y 
+					&& this.square[0].x >= this.square[1].x-this.square[1].width 
+					&& this.square[0].x < this.square[1].x+this.square[1].width  ) {
+				this.square[1].y-=2;
+			}
+		}
+		if(e.getKeyCode() == 37) {
+			System.out.println("left");
+			this.square[0].x -=2;
+			if(this.square[0].x - this.square[0].width == this.square[1].x 
+					&& this.square[0].y >= this.square[1].y-this.square[1].height 
+					&& this.square[0].y < this.square[1].y+this.square[1].height  ) {
+				this.square[1].x-=2;
+			}
+		}
+		if(e.getKeyCode() == 40) {
+			System.out.println("down");
+			this.square[0].y +=2;
+			if(this.square[0].y + this.square[0].height == this.square[1].y 
+					&& this.square[0].x >= this.square[1].x-this.square[1].width 
+					&& this.square[0].x < this.square[1].x+this.square[1].width  ) {
+				this.square[1].y+=2;
+			}
+		}
+		if(e.getKeyCode() == 39) {
+			System.out.println("right");
+			this.square[0].x +=2;
+			if(this.square[0].x + this.square[0].width == this.square[1].x 
+					&& this.square[0].y >= this.square[1].y-this.square[1].height 
+					&& this.square[0].y < this.square[1].y+this.square[1].height  ) {
+				this.square[1].x+=2;
+			}
+		}
+		
+	}
+	
+
+	
+
 }
 class PushGame extends JFrame {
 	

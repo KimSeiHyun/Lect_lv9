@@ -262,6 +262,94 @@ class OmokMap extends JPanel implements ActionListener{
 	
 
 }
+//// tc폴더를 깃헙에 연동 안해놓아서 학원에서 써놓고 집가서 연동하기. 
+//// 263 ~ 350 라인까지
+//private void checkWin() {
+//	this.win = this.win == 0 ? checkHori() : this.win;
+//	this.win = this.win == 0 ? checkVerti() : this.win;
+//	this.win = this.win == 0 ? checkDia() : this.win;
+//	this.win = this.win == 0 ? checkReverse() : this.win;
+//	
+//	if(this.win != 0) {
+//		System.out.printf("p%d의 승!!",this.win);
+//		new AlertWin(String.format("p%d의 승!!", this.turn+""));
+//	}
+//}
+//
+//
+//private int checkHori() {
+//	for(int i=0; i<this.map.length; i++) {
+//		int cnt = 0;
+//		for(int j=0; j<this.map[i].length; j++) {
+//			if(this.map[i][j].id == this.turn) cnt ++;
+//			else cnt = 0;
+//			if(cnt == 5) return this.turn;
+//		}
+//	}
+//	return 0;
+//}
+//
+//
+//private int checkVerti() {
+//	for(int i=0; i<this.map.length; i++) {
+//		int cnt = 0;
+//		for(int j=0; j<this.map[i].length; j++) {
+//			if(this.map[j][i].id == this.turn ) cnt ++;
+//			else cnt = 0;
+//			if(cnt == 5 ) return this.turn;
+//		}
+//	}
+//	return 0;
+//}
+//
+//
+//private int checkDia() {
+//	for(int i=0; i<this.map.length-4; i++) {
+//		for(int j=0; j<this.map[i].length-4; j++) {
+//			if(this.map[i][j].id == this.turn) {
+//				int cnt = 0;
+//				for(int k=0; k<5; k++) {
+//					if(this.map[i+k][j+k].id == this.turn ) cnt++;
+//				}
+//				if(cnt == 5 ) return this.turn;
+//			}
+//		}
+//	}
+//	return 0;
+//}
+//
+//
+//private int checkReverse() {
+//	for(int i=4; i<this.map.length; i++) {
+//		for(int j=0; j<this.map[i].length-4; j++) {
+//			if(this.map[i][j].id == this.turn) {
+//				int cnt = 0;
+//				for(int k=0; k<5; k++) {
+//					if(this.map[i+k][j-k].id == this.turn ) cnt++;
+//				}
+//				if(cnt == 5 ) return this.turn;
+//			}
+//		}
+//	}
+//	return 0;
+//}
+//}
+//
+//class AlertWin extends JFrame {
+//private JLabel text = new JLabel();
+//
+//public AlertWin(String text) {
+//	super("game clear!0");
+//	setLayout(null);
+//	setBounds(100,100,300,200);
+//	setVisible(true);
+//	
+//	this.text.setBounds(0,0,200,200);
+//	this.text.setText(text);
+//	this.text.setHorizontalAlignment(JLabel.CENTER);
+//	add(this.text);
+//}
+//}
 
 class OmokGame extends JFrame{
 	
