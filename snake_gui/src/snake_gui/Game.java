@@ -7,6 +7,7 @@ import javax.swing.JLabel;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.Random;
@@ -43,23 +44,44 @@ class SnakePanel extends MyUtil {
 	private Rect[] snake;
 	private JLabel titleLabel = new JLabel();
 	private JButton button[] = new JButton[4];
+	private JButton reset = new JButton();
 	private boolean death;
 	public SnakePanel() {
 		setSnake();
 		setMap();
 		setTitleLabel();
 		setButton();
+		setReset();
 		setLayout(null);
 		setBounds(0,0,900,900);
 		setBackground(new Color(247, 136, 18));
 		setFocusable(true);
 		setVisible(true);
 		revalidate();
-		
+
 		//addMouseListener(this);
 		addKeyListener(this);
 	}
 
+	private void setReset() {
+		this.reset.setBounds(650,630,150,50);
+		this.reset.setText("RESET");
+		this.reset.setFont(new Font("",1,20));
+		this.reset.setHorizontalAlignment(JLabel.CENTER);
+		this.reset.addActionListener(this);
+		add(this.reset);
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		JButton temp = (JButton) e.getSource();
+		if(temp == this.reset) {
+			this.snakeSize = 5;
+			setMap();
+			setSnake();
+			this.death = false;
+		}
+	}
 	private void setButton() {
 		int y = 550;
 		int x = 600;
@@ -161,6 +183,7 @@ class SnakePanel extends MyUtil {
 	
 	@Override
 	public void keyReleased(KeyEvent e) {
+		System.out.println(e.getKeyCode());
 		//상 38
 		if(e.getKeyCode() == 38) this.dir = 1;
 		//하 40
@@ -173,9 +196,9 @@ class SnakePanel extends MyUtil {
 	}
 	
 	private void move() {
-		// 아이템을 먹으면 꼬리가 한칸 증가.
+		// 아이템을 먹으면 꼬리가 한칸 증가. - clear
 		// 같은 몸을 만나면 사망. - clear
-		// 최대 8칸까지가능 
+		// 최대 10칸까지가능 - clear 
 		//머리(snake[0])가 한칸 움직이고 , 나머지 꼬리들은 앞에 배열의 좌표로 움직임. - clear
 		//바로 뒤로는 못움직임 ex) 몸통-몸통-몸통-머리  일때 <<왼쪽으로는 이동불가 - clear
 		// 움직일시 20프로 확률로 임의의곳에 아이템 생성 . - clear
