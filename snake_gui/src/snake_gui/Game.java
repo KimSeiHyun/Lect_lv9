@@ -10,6 +10,27 @@ import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.Random;
+
+class AlertEnd extends JFrame {
+	private JLabel text = new JLabel();
+	public AlertEnd() {
+		super("End");
+		setLayout(null);
+		setBounds(450,400,330,100);
+		setVisible(true);
+		
+		revalidate();
+		addText();
+	}
+	private void addText() {
+		this.text.setBounds(0,0,300,50);
+		this.text.setText("GAME OVER");
+		this.text.setFont(new Font("",1,30));
+		this.text.setHorizontalAlignment(JLabel.CENTER);
+		add(this.text);
+	}
+	
+}
 class SnakePanel extends MyUtil {
 	
 	
@@ -17,13 +38,17 @@ class SnakePanel extends MyUtil {
 	private final int SIZE = 50;
 	private final int MAX = 8;
 	private int dir = 0;
-	private boolean item;
+	private int snakeSize = 5;
 	private Rect[][] map;	
 	private Rect[] snake;
 	private JLabel titleLabel = new JLabel();
 	private JButton button[] = new JButton[4];
 	private boolean death;
 	public SnakePanel() {
+		setSnake();
+		setMap();
+		setTitleLabel();
+		setButton();
 		setLayout(null);
 		setBounds(0,0,900,900);
 		setBackground(new Color(247, 136, 18));
@@ -33,10 +58,6 @@ class SnakePanel extends MyUtil {
 		
 		//addMouseListener(this);
 		addKeyListener(this);
-		setSnake();
-		setMap();
-		setTitleLabel();
-		setButton();
 	}
 
 	private void setButton() {
@@ -68,7 +89,7 @@ class SnakePanel extends MyUtil {
 	}
 
 	private void setSnake() {
-		this.snake = new Rect[5];
+		this.snake = new Rect[this.snakeSize];
 		int y = 100;
 		int x = 250;
 		for(int i=0; i<this.snake.length; i++) {
@@ -97,46 +118,26 @@ class SnakePanel extends MyUtil {
 		Random rn = new Random();
 		for(int i=0; i<this.snake.length; i++) {
 			Rect temp = this.snake[i];
-			g.drawRect(temp.getX(),temp.getY(),temp.getWidth(),temp.getHeight());
+			g.drawRect(this.snake[i].getX(),this.snake[i].getY(),SIZE,SIZE);
 			if(i == 0 ) {
 				g.setColor(new Color(81, 5, 15)); // 뱀 머리색
-				g.fillRect(temp.getX(),temp.getY(),temp.getWidth(),temp.getHeight());
+				g.fillRect(this.snake[i].getX(),this.snake[i].getY(),SIZE,SIZE);
 			}else {
 				g.setColor(new Color(171, 109, 35)); // 뱀 몸통색
-				g.fillRect(temp.getX(),temp.getY(),temp.getWidth(),temp.getHeight());
+				g.fillRect(this.snake[i].getX(),this.snake[i].getY(),SIZE,SIZE);
 			}
 		}
 		g.setColor(Color.black);
 		for(int i=0; i<this.map.length; i++) {
 			for(int j=0; j<this.map[i].length; j++) {
 				Rect temp = this.map[i][j];
+				g.setColor(Color.black);
 				g.drawRect(temp.getX(),temp.getY(),temp.getWidth(),temp.getHeight());
-				int itemX = 0;
-				int itemY = 0;
-				//20프로확률
-				while(this.item == true) {
-					int check = 0;
-					int rIdx1 = rn.nextInt(this.MAPSIZE);
-					int rIdx2 = rn.nextInt(this.MAPSIZE);
-					itemX = this.map[rIdx1][rIdx2].getX();
-					itemY = this.map[rIdx1][rIdx2].getY();
-					for(int k=0; k<this.snake.length; k++) {
-						if(itemX == this.snake[k].getX() && itemY == this.snake[k].getY()) check = 1;
-					}
-					if(check == 0 && this.map[rIdx1][rIdx2].getItem() == false) {
-						System.out.println("rIdx1 : " + rIdx1);
-						System.out.println("rIdx2 : " + rIdx2);
-						this.map[rIdx1][rIdx2].setItem(true);
-						System.out.println("생성2");
-						g.setColor(Color.blue);
-						g.drawRoundRect(itemX+10, itemY+10, SIZE-20, SIZE-20, 30, 30);
-						g.fillRoundRect(itemX+10, itemY+10, SIZE-20, SIZE-20, 30, 30);	
-						this.item = false;
-						break;
-					}
+				if(this.map[i][j].getItem() == true) {
+					g.setColor(Color.blue);
+					g.drawRoundRect(this.map[i][j].getX()+10, this.map[i][j].getY()+10, SIZE-20, SIZE-20, SIZE-20, SIZE-20);
+					g.fillRoundRect(this.map[i][j].getX()+10, this.map[i][j].getY()+10, SIZE-20, SIZE-20, SIZE-20, SIZE-20);	
 				}
-
-
 			}
 		}
 		
@@ -147,7 +148,6 @@ class SnakePanel extends MyUtil {
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		
 		//상
 		if(e.getSource() == this.button[3]) this.dir = 1;
 		//하
@@ -156,13 +156,11 @@ class SnakePanel extends MyUtil {
 		if(e.getSource() == this.button[0]) this.dir = 3;
 		//우
 		if(e.getSource() == this.button[2]) this.dir = 4;
-		
 		this.move();
 	}
 	
 	@Override
 	public void keyReleased(KeyEvent e) {
-		System.out.println(e.getKeyCode());
 		//상 38
 		if(e.getKeyCode() == 38) this.dir = 1;
 		//하 40
@@ -171,7 +169,6 @@ class SnakePanel extends MyUtil {
 		if(e.getKeyCode() == 37) this.dir = 3;
 		//우 39
 		if(e.getKeyCode() == 39) this.dir = 4;
-		
 		this.move();
 	}
 	
@@ -181,7 +178,7 @@ class SnakePanel extends MyUtil {
 		// 최대 8칸까지가능 
 		//머리(snake[0])가 한칸 움직이고 , 나머지 꼬리들은 앞에 배열의 좌표로 움직임. - clear
 		//바로 뒤로는 못움직임 ex) 몸통-몸통-몸통-머리  일때 <<왼쪽으로는 이동불가 - clear
-		// 움직일시 20프로 확률로 임의의곳에 아이템 생성 . 
+		// 움직일시 20프로 확률로 임의의곳에 아이템 생성 . - clear
 		
 		// JButton으로 추가한곳에서 마우스이벤트를 발생시키면 실제 좌표가 아니라 버튼이 생긴 지점(0,0)부터 좌표를 가져오기때문에
 		// ㄴ최상위 오브젝트로 객체를 받아 사용함
@@ -201,7 +198,6 @@ class SnakePanel extends MyUtil {
 				if( i !=0 && this.snake[0].getY() == this.snake[i].getY() && this.snake[0].getX() == this.snake[i].getX()) 
 					this.death = true;
 			}
-			
 		}
 		//하
 		if(this.dir == 2 && this.snake[0].getY() != this.map[9][0].getY()) {
@@ -243,17 +239,65 @@ class SnakePanel extends MyUtil {
 			}
 		}
 		
+		if(this.death == true) {
+			AlertEnd a = new AlertEnd();
+		}
 		this.dir = 0;
 		this.addItem();
+		Rect temp2[] = new Rect[this.snake.length];
+		for(int i=0; i<temp2.length; i++) {
+			temp2[i] = new Rect(this.snake[i].getX() , this.snake[i].getY() , this.SIZE , this.SIZE);
+		}
+
+			this.addTail(temp,temp2);			
+
 	}
 	
+	private void addTail(Rect temp[] , Rect temp2[]) {
+		int check = 0;
+		for(int i=0; i<this.MAPSIZE; i++) {
+			for(int j=0; j<this.MAPSIZE; j++) {
+				if(this.map[i][j].getItem() == true && this.map[i][j].getX() == this.snake[0].getX()&& this.map[i][j].getY() == this.snake[0].getY()) {
+					this.map[i][j].setItem(false);
+					this.snakeSize ++;
+					check = 1;
+				}
+			}
+		}
+		if(check == 1 && this.snakeSize < 11) {
+			this.snake = new Rect[this.snakeSize];
+			for(int k=0; k<this.snake.length; k++) {
+				if(k < this.snakeSize-1) {
+					this.snake[k] = new Rect(temp2[k].getX() , temp2[k].getY() , this.SIZE , this.SIZE);					
+				}else {
+					this.snake[k] = new Rect(temp[temp.length-1].getX() , temp[temp.length-1].getY() , this.SIZE , this.SIZE);
+				}
+			}
+			
+		}
+
+		
+	}
 	private void addItem() {
 		Random rn = new Random();
 		int r = rn.nextInt(5);
 		if(r == 0) {
-			System.out.println("아이템 생성");
-			this.item = true;
+			while(true) {
+				int rIdx1 = rn.nextInt(this.MAPSIZE);
+				int rIdx2 = rn.nextInt(this.MAPSIZE);
+				int check = 0;
+				if(this.map[rIdx1][rIdx2].getItem() == false) {
+					for(int i=0; i<this.snake.length; i++) {
+						if(this.map[rIdx1][rIdx2].getX() == this.snake[i].getX() && this.map[rIdx1][rIdx2].getY() == this.snake[i].getY()) {
+							check = 1;
+						}
+					}
+					if(check == 0) this.map[rIdx1][rIdx2].setItem(true);
+					break;
+				}
+			}
 		}
+
 	}
 }
 public class Game extends JFrame{
