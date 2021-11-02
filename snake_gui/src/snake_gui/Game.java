@@ -94,6 +94,7 @@ class SnakePanel extends MyUtil {
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
+		Random rn = new Random();
 		for(int i=0; i<this.snake.length; i++) {
 			Rect temp = this.snake[i];
 			g.drawRect(temp.getX(),temp.getY(),temp.getWidth(),temp.getHeight());
@@ -109,16 +110,37 @@ class SnakePanel extends MyUtil {
 		for(int i=0; i<this.map.length; i++) {
 			for(int j=0; j<this.map[i].length; j++) {
 				Rect temp = this.map[i][j];
-				int itemX;
-				int itemY;
-				if(this.item) {
-					
-				}
 				g.drawRect(temp.getX(),temp.getY(),temp.getWidth(),temp.getHeight());
-				
-				
+				int itemX = 0;
+				int itemY = 0;
+				//20프로확률
+				while(this.item == true) {
+					int check = 0;
+					int rIdx1 = rn.nextInt(this.MAPSIZE);
+					int rIdx2 = rn.nextInt(this.MAPSIZE);
+					itemX = this.map[rIdx1][rIdx2].getX();
+					itemY = this.map[rIdx1][rIdx2].getY();
+					for(int k=0; k<this.snake.length; k++) {
+						if(itemX == this.snake[k].getX() && itemY == this.snake[k].getY()) check = 1;
+					}
+					if(check == 0 && this.map[rIdx1][rIdx2].getItem() == false) {
+						System.out.println("rIdx1 : " + rIdx1);
+						System.out.println("rIdx2 : " + rIdx2);
+						this.map[rIdx1][rIdx2].setItem(true);
+						this.item = false;
+						break;
+					}
+				}
+				if(itemY != 0 ) {
+					System.out.println("생성2");
+					g.setColor(Color.blue);
+					g.drawRoundRect(itemX+10, itemY+10, SIZE-20, SIZE-20, 30, 30);
+					g.fillRoundRect(itemX+10, itemY+10, SIZE-20, SIZE-20, 30, 30);	
+				}
+
 			}
 		}
+		
 		
 		repaint();
 	}
@@ -229,7 +251,10 @@ class SnakePanel extends MyUtil {
 	private void addItem() {
 		Random rn = new Random();
 		int r = rn.nextInt(5);
-		if(r == 0) this.item = true;
+		if(r == 0) {
+			System.out.println("아이템 생성");
+			this.item = true;
+		}
 	}
 }
 public class Game extends JFrame{
