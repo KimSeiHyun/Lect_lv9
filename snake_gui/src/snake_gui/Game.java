@@ -127,16 +127,15 @@ class SnakePanel extends MyUtil {
 						System.out.println("rIdx1 : " + rIdx1);
 						System.out.println("rIdx2 : " + rIdx2);
 						this.map[rIdx1][rIdx2].setItem(true);
+						System.out.println("持失2");
+						g.setColor(Color.blue);
+						g.drawRoundRect(itemX+10, itemY+10, SIZE-20, SIZE-20, 30, 30);
+						g.fillRoundRect(itemX+10, itemY+10, SIZE-20, SIZE-20, 30, 30);	
 						this.item = false;
 						break;
 					}
 				}
-				if(itemY != 0 ) {
-					System.out.println("持失2");
-					g.setColor(Color.blue);
-					g.drawRoundRect(itemX+10, itemY+10, SIZE-20, SIZE-20, 30, 30);
-					g.fillRoundRect(itemX+10, itemY+10, SIZE-20, SIZE-20, 30, 30);	
-				}
+
 
 			}
 		}
