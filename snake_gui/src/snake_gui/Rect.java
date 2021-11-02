@@ -5,7 +5,7 @@ public class Rect {
 	//
 	private int x , y , width , height;
 	private Color c;
-	
+	private boolean item;
 	public Rect(int x , int y , int width , int height) {
 		this.x = x;
 		this.y = y;
@@ -36,5 +36,11 @@ public class Rect {
 	}
 	public void setC(Color c) {
 		this.c = c;
+	}
+	public boolean getItem() {
+		return this.item;
+	}
+	public void setItem(boolean item) {
+		this.item = item;
 	}
 }
