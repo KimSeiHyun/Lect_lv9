@@ -7,6 +7,10 @@ import java.awt.event.MouseEvent;
 import javax.swing.JFrame;
 
 class Rect {
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
 	private int x , y , width , height ;
 	
 	public Rect(int x , int y , int width , int height) {
@@ -43,6 +47,7 @@ class Rect {
 	public void setHeight(int height) {
 		this.height = height;
 	}
+
 }
 class ExPanel extends MyUtil {
 	
