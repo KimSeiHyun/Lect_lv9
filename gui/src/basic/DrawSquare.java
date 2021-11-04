@@ -4,12 +4,14 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+
 
 class Rect2 {
 	public void setWidth(int width) {
@@ -63,8 +65,9 @@ class Square2 extends MyUtil {
 	private int startY;
 	private int dragX;
 	private int dragY;
-	private JButton close = new JButton();
+	public JButton close = new JButton();
 	private JLabel text = new JLabel();
+	
 	public Square2() {
 		setLayout(null);
 		setBounds(0,0,800,800);
@@ -76,7 +79,8 @@ class Square2 extends MyUtil {
 		addMouseMotionListener(this);
 		
 		setText();
-		//setClose();
+		setClose();
+		
 	}
 	
 	private void setClose() {
@@ -85,13 +89,7 @@ class Square2 extends MyUtil {
 		this.close.addActionListener(this);
 		add(this.close);
 	}
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		JButton temp = (JButton) e.getSource();
-		if(temp == this.close) {
 
-		}
-	}
 
 	private void setText() {
 		this.text.setText("사각형을 그리기 전");
@@ -108,6 +106,7 @@ class Square2 extends MyUtil {
 			g.drawRect(this.rect.getX(), this.rect.getY(), this.rect.getWidth(), this.rect.getHeight());
 		}
 		
+		requestFocusInWindow(); // KeyListener에 대한 포커스 다시 요청.
 		repaint();
 	}
 	
@@ -192,9 +191,12 @@ class Square2 extends MyUtil {
 		this.squareCheck = false;
 	}
 }
-class Draw extends JFrame {
+class Draw extends JFrame implements ActionListener{
+	
 	
 	Square2 b = new Square2();
+	
+	
 	public Draw() {
 		super("Draw");
 		setLayout(null);
@@ -203,7 +205,17 @@ class Draw extends JFrame {
 		setVisible(true);
 		add(b);
 		revalidate();
-//		this.dispose();
+		b.close.addActionListener(this);
+	}
+	
+
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource() == b.close) {
+			this.dispose();
+		}
+		
 	}
 }
 public class DrawSquare {
