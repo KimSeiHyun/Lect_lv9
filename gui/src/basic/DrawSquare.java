@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -19,7 +20,7 @@ class Rect2 {
 	}
 
 	private int x , y , width , height ;
-	
+	private boolean check;
 	public Rect2(int x , int y , int width , int height) {
 		this.x = x;
 		this.y = y;
@@ -54,13 +55,22 @@ class Rect2 {
 	public void setHeight(int height) {
 		this.height = height;
 	}
+	public boolean getCheck() {
+		return this.check;
+	}
+	public void setCheck(boolean check) {
+		this.check = check;
+	}
 
 }
 
 class Square2 extends MyUtil {
 	Rect2 rect;
+	
+	ArrayList<Rect2> arrRect = new ArrayList<>();
 	private boolean check;
 	private boolean squareCheck;
+	private int arrSize = 0;
 	private int startX;
 	private int startY;
 	private int dragX;
@@ -105,6 +115,18 @@ class Square2 extends MyUtil {
 		if(this.check) {
 			g.drawRect(this.rect.getX(), this.rect.getY(), this.rect.getWidth(), this.rect.getHeight());
 		}
+		
+		for (int i = 0; i < this.arrRect.size(); i++) {
+			
+			if(this.arrRect.get(i).getCheck()) {
+			Rect2 temp = this.arrRect.get(i);
+			g.drawRect(temp.getX(), temp.getY(), temp.getWidth(), temp.getHeight());
+//				g.drawRect(this.arrRect.get(i).getX(),this.arrRect.get(i).getY(),this.arrRect.get(i).getWidth(),this.arrRect.get(i).getHeight());				
+			}
+		}
+		
+//		g.drawRect(100, 100, 100, 100); // 실험
+		
 		
 		requestFocusInWindow(); // KeyListener에 대한 포커스 다시 요청.
 		repaint();
@@ -169,16 +191,50 @@ class Square2 extends MyUtil {
 	@Override
 	public void mousePressed(MouseEvent e) { //마우스를 누른 지점
 		this.check = false;
-		this.squareCheck = false;
 		this.startX = e.getX();
 		this.startY = e.getY();
 		System.out.println("aa");
 	}
 	@Override
 	public void mouseReleased(MouseEvent e) {//마우스를 땐 지점
-
-		System.out.printf("누른지점 (%d , %d)\n",this.startX , this.startY);
-		System.out.printf("땐지점  (%d , %d)\n",e.getX() , e.getY());
+		//누른시점에서 오른쪽위로
+		if(this.check) {
+			if(this.startX < this.dragX && this.startY > this.dragY ) {
+				if(!this.squareCheck) { // 쉬프트를 누르지 않은 상태 
+					this.arrRect.add(new Rect2(this.startX,this.dragY,(this.dragX - this.startX),(this.startY - this.dragY)));
+				}else { // 쉬프트를 누른 상태
+					this.arrRect.add(new Rect2(this.startX,this.dragY,(this.startY - this.dragY),(this.startY - this.dragY)));
+				}
+			}
+			//누른시점에서 왼쪽위로
+			if(this.startX > this.dragX && this.startY > this.dragY) {
+				if(!this.squareCheck) {
+					this.arrRect.add(new Rect2(this.dragX,this.dragY,(this.startX - this.dragX),(this.startY - this.dragY)));		
+				}else {
+					this.arrRect.add(new Rect2(this.startX-(this.startY - this.dragY),this.dragY,(this.startY - this.dragY),(this.startY - this.dragY)));	
+				}
+			}
+			//누른시점에서 오른쪽아래로
+			if(this.startX < this.dragX && this.startY < this.dragY) {
+				if(!this.squareCheck) {
+					this.arrRect.add(new Rect2(this.startX,this.startY,(this.dragX - this.startX),(this.dragY - this.startY)));	
+				}else {
+					this.arrRect.add(new Rect2(this.startX,this.startY,(this.dragY - this.startY),(this.dragY - this.startY)));								
+				}
+			}
+			//누른시점에서 왼쪽아래로
+			if(this.startX > this.dragX && this.startY < this.dragY) {
+				if(!this.squareCheck) {
+					this.arrRect.add(new Rect2(this.dragX,this.startY,(this.startX - this.dragX),(this.dragY - this.startY)));	
+				}else {
+					this.arrRect.add(new Rect2(this.startX-(this.dragY - this.startY),this.startY,(this.dragY - this.startY),(this.dragY - this.startY)));								
+				}
+			}
+			this.arrRect.get(arrSize).setCheck(true);
+			this.arrSize++;
+			
+			
+		}
 	}
 	@Override
 	public void keyPressed(KeyEvent e) {// 키보드 누르고있을때 
