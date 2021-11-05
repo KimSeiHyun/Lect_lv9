@@ -21,11 +21,13 @@ class Rect2 {
 
 	private int x , y , width , height ;
 	private boolean check;
-	public Rect2(int x , int y , int width , int height) {
+	private Color color;
+	public Rect2(int x , int y , int width , int height , Color color) {
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.height = height;
+		this.color = color;
 	}
 
 	public int getX() {
@@ -48,6 +50,14 @@ class Rect2 {
 		return width;
 	}
 
+	public Color getColor() {
+		return color;
+	}
+
+	public void setColor(Color color) {
+		this.color = color;
+	}
+
 	public int getHeight() {
 		return height;
 	}
@@ -66,14 +76,23 @@ class Rect2 {
 
 class Circle {
 	private int x , y , width , height , arcWidth , arcHeight;
-	
-	public Circle(int x , int y , int width , int height , int arcWidth , int arcHeight) {
+	private Color color;
+	public Circle(int x , int y , int width , int height , int arcWidth , int arcHeight , Color color) {
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.height = height;
 		this.arcWidth = arcWidth;
 		this.arcHeight = arcHeight;
+		this.color = color;
+	}
+
+	public Color getColor() {
+		return color;
+	}
+
+	public void setColor(Color color) {
+		this.color = color;
 	}
 
 	public int getX() {
@@ -129,14 +148,15 @@ class Triangle {
 	
 	private int x[] = new int[3];
 	private int y[] = new int[3];
-	
-	public Triangle(int x0 , int y0 , int x1, int y1 , int x2 , int y2) {
+	private Color color;
+	public Triangle(int x0 , int y0 , int x1, int y1 , int x2 , int y2 , Color color) {
 		this.x[0] = x0;
 		this.x[1] = x1;
 		this.x[2] = x2;
 		this.y[0] = y0;
 		this.y[1] = y1;
 		this.y[2] = y2;
+		this.color = color;
 		
 	}
 	
@@ -146,6 +166,14 @@ class Triangle {
 	public int[] getArrY() {
 		return this.y;
 	}
+	public Color getColor() {
+		return color;
+	}
+
+	public void setColor(Color color) {
+		this.color = color;
+	}
+
 	public int getX(int idx) {
 		return x[idx];
 	}
@@ -161,10 +189,42 @@ class Triangle {
 	
 	
 }
+
+class Brush {
+	
+	private int x , y;
+	private Color color;
+	
+	public Brush(int x , int y , Color color) {
+		this.x = x;
+		this.y = y;
+		this.color = color;
+	}
+	public int getX() {
+		return x;
+	}
+	public void setX(int x) {
+		this.x = x;
+	}
+	public int getY() {
+		return y;
+	}
+	public void setY(int y) {
+		this.y = y;
+	}
+	public Color getColor() {
+		return color;
+	}
+	public void setColor(Color color) {
+		this.color = color;
+	}
+}
 class Square2 extends MyUtil {
 	Rect2 rect;
 	Circle circle;
 	Triangle tri;
+	ArrayList<Brush> brush = new ArrayList<>();
+	ArrayList<ArrayList<Brush>> arrBrush = new ArrayList<>();
 	ArrayList<Rect2> arrRect = new ArrayList<>();
 	ArrayList<Circle> arrCircle = new ArrayList<>();
 	ArrayList<Triangle> arrTriangle = new ArrayList<>();
@@ -180,7 +240,17 @@ class Square2 extends MyUtil {
 	private JButton squareButton = new JButton();
 	private JButton circleButton = new JButton();
 	private JButton triangleButton = new JButton();
+	private JButton brushButton = new JButton();
 	private JButton resetButton = new JButton();
+	
+	private Color color = Color.black;
+	private JButton blackColorButton = new JButton();
+	private JButton redColorButton = new JButton();
+	private JButton yellowColorButton = new JButton();
+	private JButton greenColorButton = new JButton();
+	private JButton blueColorButton = new JButton();
+	
+//	private JButton color 
 	private int shape = 1;
 	public Square2() {
 		setLayout(null);
@@ -197,7 +267,43 @@ class Square2 extends MyUtil {
 		setSquareButton();
 		setCircleButton();
 		setTriangleButton();
+		setBrushButton();
 		setResetButton();
+		setColorButton();
+	}
+
+	private void setBrushButton() {
+		this.brushButton.setBounds(240,30,50,50);
+		this.brushButton.setText("~");
+		this.brushButton.addActionListener(this);
+		add(this.brushButton);
+	}
+
+	private void setColorButton() {
+		this.blackColorButton.setBounds(50,700,50,50);
+		this.blackColorButton.setBackground(Color.black);
+		this.blackColorButton.addActionListener(this);;
+		add(this.blackColorButton);
+		
+		this.redColorButton.setBounds(100,700,50,50);
+		this.redColorButton.setBackground(Color.red);
+		this.redColorButton.addActionListener(this);;
+		add(this.redColorButton);
+		
+		this.yellowColorButton.setBounds(150,700,50,50);
+		this.yellowColorButton.setBackground(Color.yellow);
+		this.yellowColorButton.addActionListener(this);;
+		add(this.yellowColorButton);
+		
+		this.greenColorButton.setBounds(200,700,50,50);
+		this.greenColorButton.setBackground(Color.green);
+		this.greenColorButton.addActionListener(this);;
+		add(this.greenColorButton);
+		
+		this.blueColorButton.setBounds(250,700,50,50);
+		this.blueColorButton.setBackground(Color.blue);
+		this.blueColorButton.addActionListener(this);;
+		add(this.blueColorButton);
 	}
 
 	private void setSquareButton() {
@@ -231,16 +337,25 @@ class Square2 extends MyUtil {
 		if(e.getSource() == this.squareButton) this.shape = 1;
 		if(e.getSource() == this.circleButton) this.shape = 2;
 		if(e.getSource() == this.triangleButton) this.shape = 3;
+		if(e.getSource() == this.brushButton) this.shape = 4;
 		if(e.getSource() == this.resetButton) {
 			this.arrRect.clear();
-			rect = new Rect2(0,0,0,0);
+			rect = new Rect2(0,0,0,0,Color.black);
 			
 			this.arrCircle.clear();
-			this.circle = new Circle(0,0,0,0,0,0);
+			this.circle = new Circle(0,0,0,0,0,0,Color.black);
 			
 			this.arrTriangle.clear();
-			this.tri = new Triangle(0,0,0,0,0,0);
+			this.tri = new Triangle(0,0,0,0,0,0 , Color.black);
+			
+			this.brush.clear();
+			this.arrBrush.clear();
 		}
+		if(e.getSource() == this.blackColorButton) this.color = Color.black;
+		if(e.getSource() == this.redColorButton) this.color = Color.red;
+		if(e.getSource() == this.yellowColorButton) this.color = Color.yellow;
+		if(e.getSource() == this.greenColorButton) this.color = Color.green;
+		if(e.getSource() == this.blueColorButton) this.color = Color.blue;
 		this.check = false;
 	}
 
@@ -265,6 +380,7 @@ class Square2 extends MyUtil {
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
+		g.setColor(this.color);
 		if(this.shape == 1) {
 			if(this.check) {
 				g.drawRect(this.rect.getX(), this.rect.getY(), this.rect.getWidth(), this.rect.getHeight());
@@ -277,10 +393,24 @@ class Square2 extends MyUtil {
 			if(this.check) {
 				g.drawPolygon(this.tri.getArrX(), this.tri.getArrY(), 3);
 			}
+		}else if(this.shape == 4) {
+			if(this.check) {
+				if(this.brush.size() >=2) {
+					for(int i=0; i<this.brush.size()-1; i++) {
+						//drawLing( x1 , y1 , x2 , y2);
+						//첫번째점 
+						Brush temp1 = this.brush.get(i);
+						Brush temp2 = this.brush.get(i+1);
+						g.drawLine(temp1.getX(), temp1.getY(), temp2.getX(), temp2.getY());
+					}
+					
+				}
+			}
 		}
 		for (int i = 0; i < this.arrRect.size(); i++) {
 			//if(this.arrRect.get(i).getCheck()) {
 				Rect2 temp = this.arrRect.get(i);
+				g.setColor(this.arrRect.get(i).getColor());
 				g.drawRect(temp.getX(), temp.getY(), temp.getWidth(), temp.getHeight());
 //				g.drawRect(this.arrRect.get(i).getX(),this.arrRect.get(i).getY(),this.arrRect.get(i).getWidth(),this.arrRect.get(i).getHeight());				
 			//}
@@ -288,17 +418,27 @@ class Square2 extends MyUtil {
 		
 		for(int i=0; i<this.arrCircle.size(); i++) {
 			Circle temp = this.arrCircle.get(i);
+			g.setColor(this.arrCircle.get(i).getColor());
 			g.drawRoundRect(temp.getX(), temp.getY(), temp.getWidth(), temp.getHeight(), temp.getArcWidth(), temp.getArcHeight());
 		}
 		
 		for(int i=0; i<this.arrTriangle.size(); i++) {
 			Triangle temp = this.arrTriangle.get(i);
+			g.setColor(this.arrTriangle.get(i).getColor());
 			g.drawPolygon(temp.getArrX(), temp.getArrY(), 3);
+		}
+		
+		for(int i=0; i<this.arrBrush.size(); i++) {
+			for(int j=0; j<this.arrBrush.get(i).size()-1; j++) {
+				Brush temp1 = this.arrBrush.get(i).get(j);
+				Brush temp2 = this.arrBrush.get(i).get(j+1);
+				g.setColor(temp1.getColor());
+				g.drawLine(temp1.getX(), temp1.getY(), temp2.getX(), temp2.getY());
+			}
 		}
 	//	g.drawRect(100, 100, 100, 100); // 실험
 	//	g.drawRoundRect(100, 100, 200, 200, 300, 300);
 	//	g.drawRoundRect(100, 100, 100, 100, 100, 100);
-
 		requestFocusInWindow(); // KeyListener에 대한 포커스 다시 요청.
 		repaint();
 	}
@@ -323,36 +463,36 @@ class Square2 extends MyUtil {
 		if(this.shape == 1) { // 사각형 = 1
 			if(this.startX < this.dragX && this.startY > this.dragY ) {
 				if(!this.shiftCheck) { // 쉬프트를 누르지 않은 상태 
-					this.rect = new Rect2(this.startX,this.dragY,(this.dragX - this.startX),(this.startY - this.dragY));
+					this.rect = new Rect2(this.startX,this.dragY,(this.dragX - this.startX),(this.startY - this.dragY),this.color);
 				}else { // 쉬프트를 누른 상태
-					this.rect = new Rect2(this.startX,this.dragY,(this.startY - this.dragY),(this.startY - this.dragY));
+					this.rect = new Rect2(this.startX,this.dragY,(this.startY - this.dragY),(this.startY - this.dragY),this.color);
 				}
 				this.check = true;
 			}
 			//누른시점에서 왼쪽위로
 			if(this.startX > this.dragX && this.startY > this.dragY) {
 				if(!this.shiftCheck) {
-					this.rect = new Rect2(this.dragX,this.dragY,(this.startX - this.dragX),(this.startY - this.dragY));		
+					this.rect = new Rect2(this.dragX,this.dragY,(this.startX - this.dragX),(this.startY - this.dragY),this.color);		
 				}else {
-					this.rect = new Rect2(this.startX-(this.startY - this.dragY),this.dragY,(this.startY - this.dragY),(this.startY - this.dragY));	
+					this.rect = new Rect2(this.startX-(this.startY - this.dragY),this.dragY,(this.startY - this.dragY),(this.startY - this.dragY),this.color);	
 				}
 				this.check = true;
 			}
 			//누른시점에서 오른쪽아래로
 			if(this.startX < this.dragX && this.startY < this.dragY) {
 				if(!this.shiftCheck) {
-					this.rect = new Rect2(this.startX,this.startY,(this.dragX - this.startX),(this.dragY - this.startY));	
+					this.rect = new Rect2(this.startX,this.startY,(this.dragX - this.startX),(this.dragY - this.startY),this.color);	
 				}else {
-					this.rect = new Rect2(this.startX,this.startY,(this.dragY - this.startY),(this.dragY - this.startY));								
+					this.rect = new Rect2(this.startX,this.startY,(this.dragY - this.startY),(this.dragY - this.startY),this.color);								
 				}
 				this.check = true;
 			}
 			//누른시점에서 왼쪽아래로
 			if(this.startX > this.dragX && this.startY < this.dragY) {
 				if(!this.shiftCheck) {
-					this.rect = new Rect2(this.dragX,this.startY,(this.startX - this.dragX),(this.dragY - this.startY));	
+					this.rect = new Rect2(this.dragX,this.startY,(this.startX - this.dragX),(this.dragY - this.startY),this.color);	
 				}else {
-					this.rect = new Rect2(this.startX-(this.dragY - this.startY),this.startY,(this.dragY - this.startY),(this.dragY - this.startY));								
+					this.rect = new Rect2(this.startX-(this.dragY - this.startY),this.startY,(this.dragY - this.startY),(this.dragY - this.startY),this.color);								
 				}
 				this.check = true;
 			}
@@ -362,36 +502,36 @@ class Square2 extends MyUtil {
 			//누른시점에서 오른쪽위로
 			if(this.startX < this.dragX && this.startY > this.dragY) {
 				if(!this.shiftCheck) {
-					this.circle = new Circle(this.startX,this.dragY,(this.dragX - this.startX),(this.startY - this.dragY) ,(this.dragX - this.startX) ,(this.startY - this.dragY) );					
+					this.circle = new Circle(this.startX,this.dragY,(this.dragX - this.startX),(this.startY - this.dragY) ,(this.dragX - this.startX) ,(this.startY - this.dragY) ,this.color);					
 				}else {
-					this.circle = new Circle(this.startX,this.dragY,(this.startY - this.dragY),(this.startY - this.dragY),(this.startY - this.dragY),(this.startY - this.dragY));
+					this.circle = new Circle(this.startX,this.dragY,(this.startY - this.dragY),(this.startY - this.dragY),(this.startY - this.dragY),(this.startY - this.dragY),this.color);
 				}
 				this.check = true;					
 			}
 			//누른시점에서 왼쪽위로
 			if(this.startX > this.dragX && this.startY > this.dragY) {
 				if(!this.shiftCheck) {
-					this.circle = new Circle(this.dragX,this.dragY,(this.startX - this.dragX),(this.startY - this.dragY),(this.startX - this.dragX),(this.startY - this.dragY));
+					this.circle = new Circle(this.dragX,this.dragY,(this.startX - this.dragX),(this.startY - this.dragY),(this.startX - this.dragX),(this.startY - this.dragY),this.color);
 				}else {
-					this.circle = new Circle(this.startX-(this.startY - this.dragY),this.dragY,(this.startY - this.dragY),(this.startY - this.dragY),(this.startY - this.dragY),(this.startY - this.dragY));
+					this.circle = new Circle(this.startX-(this.startY - this.dragY),this.dragY,(this.startY - this.dragY),(this.startY - this.dragY),(this.startY - this.dragY),(this.startY - this.dragY),this.color);
 				}
 				this.check = true;
 			}
 			//누른시점에서 오른쪽아래로
 			if(this.startX < this.dragX && this.startY < this.dragY) {
 				if(!this.shiftCheck) {
-					this.circle = new Circle(this.startX,this.startY,(this.dragX - this.startX),(this.dragY - this.startY),(this.dragX - this.startX),(this.dragY - this.startY));
+					this.circle = new Circle(this.startX,this.startY,(this.dragX - this.startX),(this.dragY - this.startY),(this.dragX - this.startX),(this.dragY - this.startY),this.color);
 				}else {
-					this.circle = new Circle(this.startX,this.startY,(this.dragY - this.startY),(this.dragY - this.startY),(this.dragY - this.startY),(this.dragY - this.startY));
+					this.circle = new Circle(this.startX,this.startY,(this.dragY - this.startY),(this.dragY - this.startY),(this.dragY - this.startY),(this.dragY - this.startY),this.color);
 				}
 				this.check = true;
 			}
 			//누른시점에서 왼쪽아래로
 			if(this.startX > this.dragX && this.startY < this.dragY) {
 				if(!this.shiftCheck) { 
-					this.circle = new Circle(this.dragX,this.startY,(this.startX - this.dragX),(this.dragY - this.startY),(this.startX - this.dragX),(this.dragY - this.startY));
+					this.circle = new Circle(this.dragX,this.startY,(this.startX - this.dragX),(this.dragY - this.startY),(this.startX - this.dragX),(this.dragY - this.startY),this.color);
 				}else {
-					this.circle = new Circle(this.startX-(this.dragY - this.startY),this.startY,(this.dragY - this.startY),(this.dragY - this.startY),(this.dragY - this.startY),(this.dragY - this.startY));
+					this.circle = new Circle(this.startX-(this.dragY - this.startY),this.startY,(this.dragY - this.startY),(this.dragY - this.startY),(this.dragY - this.startY),(this.dragY - this.startY),this.color);
 				}
 				this.check = true;
 			}
@@ -401,9 +541,9 @@ class Square2 extends MyUtil {
 			// 제곱근 구하는 메서드 Marg.sqrt(변수);
 			if(this.startX < this.dragX && this.startY > this.dragY) {
 				if(!this.shiftCheck) {
-					this.tri = new Triangle(this.startX,this.startY , this.dragX , this.startY, this.dragX-(this.dragX-this.startX)/2,this.dragY);
+					this.tri = new Triangle(this.startX,this.startY , this.dragX , this.startY, this.dragX-(this.dragX-this.startX)/2,this.dragY,this.color);
 				}else {
-					this.tri = new Triangle(this.startX,this.startY , this.dragX , this.startY, this.dragX-(this.dragX-this.startX)/2,this.startY - height);
+					this.tri = new Triangle(this.startX,this.startY , this.dragX , this.startY, this.dragX-(this.dragX-this.startX)/2,this.startY - height,this.color);
 				}
 				this.check = true;					
 			}
@@ -411,30 +551,34 @@ class Square2 extends MyUtil {
 			if(this.startX > this.dragX && this.startY > this.dragY) {
 				if(!this.shiftCheck) {
 					//x1,y1,x2,y2,x3,y3
-					this.tri = new Triangle(this.startX , this.startY ,this.dragX , this.startY , this.startX - (this.startX - this.dragX)/2,this.dragY );
+					this.tri = new Triangle(this.startX , this.startY ,this.dragX , this.startY , this.startX - (this.startX - this.dragX)/2,this.dragY,this.color );
 				}else {
-					this.tri = new Triangle(this.startX , this.startY ,this.dragX , this.startY , this.startX - (this.startX - this.dragX)/2,this.startY + height );
+					this.tri = new Triangle(this.startX , this.startY ,this.dragX , this.startY , this.startX - (this.startX - this.dragX)/2,this.startY + height ,this.color);
 				}
 				this.check = true;
 			}
 			//누른시점에서 오른쪽아래로
 			if(this.startX < this.dragX && this.startY < this.dragY) {
 				if(!this.shiftCheck) {
-					this.tri = new Triangle(this.startX , this.startY , this.dragX , this.startY ,this.dragX - (this.dragX - this.startX)/2 ,this.dragY);
+					this.tri = new Triangle(this.startX , this.startY , this.dragX , this.startY ,this.dragX - (this.dragX - this.startX)/2 ,this.dragY,this.color);
 				}else {
-					this.tri = new Triangle(this.startX , this.startY , this.dragX , this.startY ,this.dragX - (this.dragX - this.startX)/2 ,this.startY + height);
+					this.tri = new Triangle(this.startX , this.startY , this.dragX , this.startY ,this.dragX - (this.dragX - this.startX)/2 ,this.startY + height,this.color);
 				}
 				this.check = true;
 			}
 			//누른시점에서 왼쪽아래로
 			if(this.startX > this.dragX && this.startY < this.dragY) {
 				if(!this.shiftCheck) { 
-					this.tri = new Triangle(this.startX , this.startY ,this.dragX , this.startY , this.startX - (this.startX - this.dragX)/2,this.dragY );
+					this.tri = new Triangle(this.startX , this.startY ,this.dragX , this.startY , this.startX - (this.startX - this.dragX)/2,this.dragY ,this.color);
 				}else {
-					this.tri = new Triangle(this.startX , this.startY ,this.dragX , this.startY , this.startX - (this.startX - this.dragX)/2,this.startY - height );
+					this.tri = new Triangle(this.startX , this.startY ,this.dragX , this.startY , this.startX - (this.startX - this.dragX)/2,this.startY - height ,this.color);
 				}
 				this.check = true;
 			}
+		}else if (this.shape == 4) {
+				this.brush.add(new Brush(this.dragX , this.dragY , this.color));				
+			this.check = true;
+			
 		}
 		
 		//체크용 
@@ -448,6 +592,7 @@ class Square2 extends MyUtil {
 		this.check = false;
 		this.startX = e.getX();
 		this.startY = e.getY();
+		this.brush.clear();
 	//	System.out.println("누름 지점 x : " + e.getX());
 	//	System.out.println("누름 지점 y : " + e.getY());
 	}
@@ -466,7 +611,21 @@ class Square2 extends MyUtil {
 			if (this.check) {
 				this.arrTriangle.add(tri);
 			}
+		} else if(this.shape == 4) {
+			if (this.check) {
+				//this.brush가 계속 clear(); 되니깐 arraylist<brush> temp를 임의로 만들어서 arrBrush에 값이 사라지지않게 추가함.
+				ArrayList<Brush> temp = new ArrayList<>();
+				for(int i=0; i<this.brush.size(); i++) {
+					temp.add(this.brush.get(i));
+					temp.get(i).setX(this.brush.get(i).getX());
+					temp.get(i).setY(this.brush.get(i).getY());
+					temp.get(i).setColor(this.brush.get(i).getColor());
+				}
+				this.arrBrush.add(temp);
+			}
 		}
+
+
 	}
 	@Override
 	public void keyPressed(KeyEvent e) {// 키보드 누르고있을때 
