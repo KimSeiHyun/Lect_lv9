@@ -220,14 +220,16 @@ class Brush {
 	}
 }
 class Square2 extends MyUtil {
+	
 	Rect2 rect;
 	Circle circle;
 	Triangle tri;
 	ArrayList<Brush> brush = new ArrayList<>();
-	ArrayList<ArrayList<Brush>> arrBrush = new ArrayList<>();
+	
 	ArrayList<Rect2> arrRect = new ArrayList<>();
 	ArrayList<Circle> arrCircle = new ArrayList<>();
 	ArrayList<Triangle> arrTriangle = new ArrayList<>();
+	ArrayList<ArrayList<Brush>> arrBrush = new ArrayList<>();
 	private boolean check;
 	private boolean shiftCheck;
 	
