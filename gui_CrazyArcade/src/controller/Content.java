@@ -81,7 +81,6 @@ public class Content extends MyUtil{
 	}
 	@Override
 	public void keyReleased(KeyEvent e) {
-		System.out.println(e.getKeyCode());
 		// 상38 하40 좌37 우39 스페이스바32 A65
 		int y = this.playerY;
 		int x = this.playerX;
@@ -124,8 +123,6 @@ public class Content extends MyUtil{
 		}
 		if(e.getKeyCode() == 32) { // 폭탄 좌표 출력용 
 			for(int i=0; i<this.bombArr.size(); i++) {
-				System.out.println("y  : " +this.bombArr.get(i).getY());
-				System.out.println("x  : " +this.bombArr.get(i).getX());
 			}
 		}
 		
@@ -149,7 +146,7 @@ public class Content extends MyUtil{
 							if(rNum == 0) this.map[tempBomb.getY()][tempBomb.getX()+i].setImage(itemImage);
 							else this.map[tempBomb.getY()][tempBomb.getX()+i].setImage(grassImage);
 						}
-						if(this.map[tempBomb.getY()][tempBomb.getX()+i].getImage() == this.bombImage) {
+						if(this.map[tempBomb.getY()][tempBomb.getX()+i].getImage() == this.bombImage) { //폭탄옆에 폭탄이 있을경우 위치를 기억함 . 
 							check = true;
 							tempY = tempBomb.getY();
 							tempX = tempBomb.getX()+i;			
@@ -183,17 +180,12 @@ public class Content extends MyUtil{
 					break;
 				}
 				else {
-					System.out.println("tempY : " +tempY);
-					System.out.println("tempX : " +tempX);
 					for(int i=0; i<this.bombArr.size(); i++) {
-						if(this.bombArr.get(i).getX() == tempX && this.bombArr.get(i).getY() == tempY) {
+						if(this.bombArr.get(i).getX() == tempX && this.bombArr.get(i).getY() == tempY) { //위에 폭탄을 기억한 위치에서 인덱스를 찾음. 
 							idx = i;
-							System.out.println("arrI y : " + this.bombArr.get(i).getY());
-							System.out.println("arrI x : " + this.bombArr.get(i).getX());
 						}
 					}
-					System.out.println("idx : " + idx);
-					Map temp2 = this.bombArr.get(0);
+					Map temp2 = this.bombArr.get(0); // 찾은 인덱스를 제일 앞으로 보내고 0인덱스를 뒤로보내고 지워버림 그리고 while문 다시 반복(옆에 폭탄이 없을때까지)
 					this.bombArr.set(0, this.bombArr.get(idx));
 					this.bombArr.set(idx, temp2);
 					this.bombArr.remove(idx);
@@ -225,7 +217,6 @@ public class Content extends MyUtil{
 			y+=50;
 			x= 0;
 		}
-		System.out.println(map[1][1].getImage());
 		for(int i=0; i<this.grassArr.length; i++) { //뱁 배열에 잔디 이미지 배치
 			for(int j=0; j<this.grassArr[i].length; j++) {
 				this.map[i][this.grassArr[i][j]].setImage(grassImage);
