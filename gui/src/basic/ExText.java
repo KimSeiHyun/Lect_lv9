@@ -183,6 +183,7 @@ public class ExText extends JFrame implements ActionListener , KeyListener , Mou
 		
 		revalidate();
 		repaint();
+		
 		// 1 . JLabel로 데이터 전체 출력
 		//updateDataField();
 	}
