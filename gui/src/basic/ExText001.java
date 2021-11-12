@@ -3,6 +3,10 @@ package basic;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.Vector;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -52,7 +56,13 @@ class LogoutFrame extends JFrame {
 		
 	}
 }
-class SignFrame extends JFrame implements KeyListener , ActionListener{
+class SignFrame extends JFrame implements KeyListener , ActionListener {
+	
+	
+	File file = new File("ExText001");
+	FileWriter fw = null;
+
+
 	
 	JTextField nameField = new JTextField();
 	JTextField idField = new JTextField();
@@ -141,12 +151,23 @@ class SignFrame extends JFrame implements KeyListener , ActionListener{
 						System.out.printf("[%d] Id : %s \t Pw : %s \t name : %s\n" ,(i+1) , Text.members.get(i).get(0),Text.members.get(i).get(1),Text.members.get(i).get(2));						
 				}
 				System.out.println("-------------");
+				this.save();
 			}
 		}
 		}
 	}
 
-
+	private void save() {
+		try {
+			this.fw = new FileWriter(file);
+			for(int i=0; i<Text.members.size(); i++) {
+				fw.write(Text.members.get(i).get(0)+"/"+Text.members.get(i).get(1)+"/"+Text.members.get(i).get(2)+"\n");
+			}
+			fw.close();
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
 	@Override
 	public void keyTyped(KeyEvent e) {
 		// TODO Auto-generated method stub
@@ -268,7 +289,10 @@ class LoginFrame extends JFrame implements KeyListener , ActionListener{
 
 class Text extends JFrame implements KeyListener , ActionListener{
 	
-
+	File file = new File("ExText001");
+	FileReader fr = null;
+	BufferedReader br = null;
+	
 	JButton signButton = new JButton();
 	JButton loginButton = new JButton();
 	JButton logoutButton = new JButton();
@@ -360,12 +384,40 @@ class Text extends JFrame implements KeyListener , ActionListener{
 		
 	}
 	
+	public void load() {
+		try {
+			this.fr = new FileReader(file);
+			this.br = new BufferedReader(fr);
+			while(true) {
+				String temp = br.readLine();
+				if(temp == null) return;
+				
+				String member[] = temp.split("/");
+				Vector<String> tempMember = new Vector<>();
+				String id = member[0];
+				String pw = member[1];
+				String name = member[2];
+				
+				tempMember.add(id);
+				tempMember.add(pw);
+				tempMember.add(name);
+				
+				this.members.add(tempMember);
+				
+			}
+			
+		} catch (Exception e) {
+			
+		}
+	}
+	
 }
 
 public class ExText001 {
 
 	public static void main(String[] args) {
 		Text a = new Text();
+		a.load();
 	}
 
 }
