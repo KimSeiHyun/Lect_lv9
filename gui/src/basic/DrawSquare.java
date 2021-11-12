@@ -627,7 +627,7 @@ class Square2 extends MyUtil {
 			}
 		}
 
-
+		
 	}
 	@Override
 	public void keyPressed(KeyEvent e) {// 키보드 누르고있을때 

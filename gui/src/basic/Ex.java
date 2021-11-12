@@ -30,7 +30,8 @@ class ExPanel2 extends MyUtil {
 		this.image.setBounds(0,0,500,500);
 	//	this.image.setIcon(new ImageIcon("image/루피.png"));
 		this.image.setVisible(true);
-		add(this.image); // <<<   우선순위 변경 [ 제일먼저 add한것은 변경을 할 수 없음.]
+		
+		add(this.image,0); // <<<   우선순위 변경 [ 제일먼저 add한것은 변경을 할 수 없음.]
 //		
 //		//컴포넌트 지우기
 //		remove(image);
