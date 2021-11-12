@@ -36,7 +36,7 @@ class ExPanel2 extends MyUtil {
 		add(this.image); // <<<   우선순위 변경 [ 제일먼저 add한것은 변경을 할 수 없음.]
 		add(this.image2);
 		//먼저 추가한것일수록 제일 위로 올라오고 다음에 추가하는건 그 뒤로 깔림.
-//		
+//		//
 //		//컴포넌트 지우기
 //		remove(image);
 //		this.revalidate();
