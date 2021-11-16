@@ -18,7 +18,7 @@ import models.Map;
 
 public class Content extends MyUtil{
 	private Random random = new Random();
-	private int bombMax = 3;
+	private int bombMax = 10;
 	private int bombCnt = 0;
 	private int grassArr[][] = {{1,2,3,4,5,6,7,8,9,10},{0,2,4,6,8,10},{0,1,2,3,4,5,6,7,8,9,10},{0,2,4,6,8,10},{0,1,2,3,4,5,6,7,8,9,10},{0,2,4,6,8,10},{0,1,2,3,4,5,6,7,8,9,10},{0,2,4,6,8,10},{0,1,2,3,4,5,6,7,8,9,10},{0,2,4,6,8,10},{0,1,2,3,4,5,6,7,8,9,10}};
 	private int playerY = 0;
@@ -30,6 +30,7 @@ public class Content extends MyUtil{
 	private Map map[][] = new Map[MAPSIZE][MAPSIZE];
 	private ArrayList<Map> bombArr = new ArrayList<>();
 	
+	private ArrayList<Map> chainBombIdxArr = new ArrayList<>();
 	
 	private Image bazziImage = new ImageIcon("images/bazzi.jpg").getImage().getScaledInstance(IMAGESIZE, IMAGESIZE, Image.SCALE_SMOOTH);
 	private Image bombImage = new ImageIcon("images/bomb.jpg").getImage().getScaledInstance(IMAGESIZE, IMAGESIZE, Image.SCALE_SMOOTH);
@@ -127,8 +128,6 @@ public class Content extends MyUtil{
 		}
 		
 		if(e.getKeyCode() == 65 && !this.playerCheck && this.bombCnt > 0) {
-			boolean check = false;
-			while(!check && this.bombCnt != 0) {
 				Map tempBomb = this.bombArr.get(0);
 				int tempY = -1;
 				int tempX = -1;
@@ -147,9 +146,9 @@ public class Content extends MyUtil{
 							else this.map[tempBomb.getY()][tempBomb.getX()+i].setImage(grassImage);
 						}
 						if(this.map[tempBomb.getY()][tempBomb.getX()+i].getImage() == this.bombImage) { //ÆøÅº¿·¿¡ ÆøÅºÀÌ ÀÖÀ»°æ¿ì À§Ä¡¸¦ ±â¾ïÇÔ . 
-							check = true;
 							tempY = tempBomb.getY();
 							tempX = tempBomb.getX()+i;			
+							this.chainBombIdxArr.add(new Map(tempX , tempY));
 						}
 					}
 					
@@ -164,44 +163,172 @@ public class Content extends MyUtil{
 							else this.map[tempBomb.getY()+i][tempBomb.getX()].setImage(grassImage);
 						}
 						if(this.map[tempBomb.getY()+i][tempBomb.getX()].getImage() == this.bombImage) {
-							check = true;
 							tempY = tempBomb.getY()+i;
 							tempX = tempBomb.getX();			
+							this.chainBombIdxArr.add(new Map(tempX , tempY));
 						}
 					}
 				}
 				this.map[this.bombArr.get(0).getY()][this.bombArr.get(0).getX()].setImage(grassImage);
 				this.map[this.bombArr.get(0).getY()][this.bombArr.get(0).getX()].setBazziCheck(false);
-				
-				if(!check) {
-					this.bombArr.remove(0);
-					this.bombCnt --;
-					this.bombCntText.setText(String.format("<html>BombCnt : %d<br>BombMaxCnt : %d<br><br>SpaceBar : ÆøÅº¼³Ä¡<br>A : ÆøÆÄ</html>", this.bombCnt , this.bombMax));
-					break;
-				}
-				else {
-					for(int i=0; i<this.bombArr.size(); i++) {
-						if(this.bombArr.get(i).getX() == tempX && this.bombArr.get(i).getY() == tempY) { //À§¿¡ ÆøÅºÀ» ±â¾ïÇÑ À§Ä¡¿¡¼­ ÀÎµ¦½º¸¦ Ã£À½. 
-							idx = i;
+				this.bombArr.remove(0);
+				this.bombCnt --;
+				this.bombCntText.setText(String.format("<html>BombCnt : %d<br>BombMaxCnt : %d<br><br>SpaceBar : ÆøÅº¼³Ä¡<br>A : ÆøÆÄ</html>", this.bombCnt , this.bombMax));
+					while(this.chainBombIdxArr.size() != 0) {
+						//chainBombIdxArr ¿¡ µé¾îÀÖ´Â°Ç ¿¬¼âµÅÀÖ´Â ÆøÅºÀÇ ÁÂÇ¥µé(x,y).
+						//±×·¡¼­ chainBombIdxArr¿¡ ÀÖ´Â ÁÂÇ¥¶û  bombArr¿¡ ÀÖ´Â ÁÂÇ¥¶û µ¿ÀÏÇÑ°É Ã£¾Æ¼­ 
+						//chainBombIdxArr¶û bombArr¶û µÑ´Ù removeÇØÁÙ°ÅÀÓ . 
+						for(int a=0; a<this.bombArr.size(); a++) {
+							for(int b=0; b<this.chainBombIdxArr.size(); b++) {
+								System.out.println("bombarr  : " + this.bombArr.size() );
+								System.out.println("chainarr  : " + this.chainBombIdxArr.size() );
+								System.out.println("a : " + a);
+								System.out.println("b : " + b);
+								if(this.bombArr.get(a).getX() == this.chainBombIdxArr.get(b).getX() && this.bombArr.get(a).getY() == this.chainBombIdxArr.get(b).getY()) {
+									Map tempBomb2 = this.bombArr.get(a);
+									tempY = -1;
+									tempX = -1;
+									idx = -1;
+									for(int i=-1; i<=1; i++) {
+										if( i != 0 && tempBomb2.getX()+i >=0 && tempBomb2.getX()+i < 11) { //ÆøÅºÀÇ °¡·Î°Ë»ç
+											if(this.map[tempBomb2.getY()][tempBomb2.getX()+i].getImage() == this.bazziImage) this.deathCheck = true;
+											if(this.map[tempBomb2.getY()][tempBomb2.getX()+i].getImage() == this.itemImage) {
+												this.map[tempBomb2.getY()][tempBomb2.getX()+i].setImage(grassImage);
+											}
+											if(this.map[tempBomb2.getY()][tempBomb2.getX()+i].getImage() == this.brickImage) {
+												int rNum = this.random.nextInt(5);
+												if(rNum == 0) this.map[tempBomb2.getY()][tempBomb2.getX()+i].setImage(itemImage);
+												else this.map[tempBomb2.getY()][tempBomb2.getX()+i].setImage(grassImage);
+											}
+											if(this.map[tempBomb2.getY()][tempBomb2.getX()+i].getImage() == this.bombImage) { //ÆøÅº¿·¿¡ ÆøÅºÀÌ ÀÖÀ»°æ¿ì À§Ä¡¸¦ ±â¾ïÇÔ . 
+												tempY = tempBomb2.getY();
+												tempX = tempBomb2.getX()+i;			
+												this.chainBombIdxArr.add(new Map(tempX , tempY));
+											}
+										}
+										
+										if( i != 0 && tempBomb2.getY()+i >= 0 && tempBomb2.getY() +i < 11) { //ÆøÅºÀÇ ¼¼·Î°Ë»ç
+											if(this.map[tempBomb2.getY()+i][tempBomb2.getX()].getImage() == this.bazziImage) this.deathCheck = true;
+											if(this.map[tempBomb2.getY()+i][tempBomb2.getX()].getImage() == this.itemImage) {
+												this.map[tempBomb2.getY()+i][tempBomb2.getX()].setImage(grassImage);
+											}
+											if(this.map[tempBomb2.getY()+i][tempBomb2.getX()].getImage() == this.brickImage) {
+												int rNum = this.random.nextInt(5);
+												if(rNum == 0) this.map[tempBomb2.getY()+i][tempBomb2.getX()].setImage(itemImage);
+												else this.map[tempBomb2.getY()+i][tempBomb2.getX()].setImage(grassImage);
+											}
+											if(this.map[tempBomb2.getY()+i][tempBomb2.getX()].getImage() == this.bombImage) {
+												tempY = tempBomb2.getY()+i;
+												tempX = tempBomb2.getX();			
+												this.chainBombIdxArr.add(new Map(tempX , tempY));
+											}
+										}
+									}
+									
+									this.map[this.bombArr.get(a).getY()][this.bombArr.get(a).getX()].setImage(grassImage);
+									this.map[this.bombArr.get(a).getY()][this.bombArr.get(a).getX()].setBazziCheck(false);
+									this.bombArr.remove(a);
+									this.chainBombIdxArr.remove(b);
+									this.bombCnt --;
+									this.bombCntText.setText(String.format("<html>BombCnt : %d<br>BombMaxCnt : %d<br><br>SpaceBar : ÆøÅº¼³Ä¡<br>A : ÆøÆÄ</html>", this.bombCnt , this.bombMax));
+									break;
+								}
+							}
 						}
 					}
-					Map temp2 = this.bombArr.get(0); // Ã£Àº ÀÎµ¦½º¸¦ Á¦ÀÏ ¾ÕÀ¸·Î º¸³»°í 0ÀÎµ¦½º¸¦ µÚ·Îº¸³»°í Áö¿ö¹ö¸² ±×¸®°í while¹® ´Ù½Ã ¹Ýº¹(¿·¿¡ ÆøÅºÀÌ ¾øÀ»¶§±îÁö)
-					this.bombArr.set(0, this.bombArr.get(idx));
-					this.bombArr.set(idx, temp2);
-					this.bombArr.remove(idx);
-					
-					this.bombCnt --;
-					this.bombCntText.setText(String.format("<html>BombCnt : %d<br>BombMaxCnt : %d<br><br>SpaceBar : ÆøÅº¼³Ä¡<br>A : ÆøÆÄ</html>", this.bombCnt , this.bombMax));	
-					check = false;
-				}
+
 			
-			}
 				
 				
 			}
 		if(this.deathCheck) {
 			CrazyArcade.end();
 		}
+			
+			
+			
+			
+			
+			
+			
+//			boolean check = false;
+//			while(!check && this.bombCnt != 0) {
+//				Map tempBomb = this.bombArr.get(0);
+//				int tempY = -1;
+//				int tempX = -1;
+//				int idx = -1;
+//				for(int i=-1; i<=1; i++) {
+//					//		System.out.println("tempBomb y : " +tempBomb.getY());
+//					//		System.out.println("tempBomb x : " +tempBomb.getX());
+//					if( i != 0 && tempBomb.getX()+i >=0 && tempBomb.getX()+i < 11) { //ÆøÅºÀÇ °¡·Î°Ë»ç
+//						if(this.map[tempBomb.getY()][tempBomb.getX()+i].getImage() == this.bazziImage) this.deathCheck = true;
+//						if(this.map[tempBomb.getY()][tempBomb.getX()+i].getImage() == this.itemImage) {
+//							this.map[tempBomb.getY()][tempBomb.getX()+i].setImage(grassImage);
+//						}
+//						if(this.map[tempBomb.getY()][tempBomb.getX()+i].getImage() == this.brickImage) {
+//							int rNum = this.random.nextInt(5);
+//							if(rNum == 0) this.map[tempBomb.getY()][tempBomb.getX()+i].setImage(itemImage);
+//							else this.map[tempBomb.getY()][tempBomb.getX()+i].setImage(grassImage);
+//						}
+//						if(this.map[tempBomb.getY()][tempBomb.getX()+i].getImage() == this.bombImage) { //ÆøÅº¿·¿¡ ÆøÅºÀÌ ÀÖÀ»°æ¿ì À§Ä¡¸¦ ±â¾ïÇÔ . 
+//							check = true;
+//							tempY = tempBomb.getY();
+//							tempX = tempBomb.getX()+i;			
+//						}
+//					}
+//					
+//					if( i != 0 && tempBomb.getY()+i >= 0 && tempBomb.getY() +i < 11) { //ÆøÅºÀÇ ¼¼·Î°Ë»ç
+//						if(this.map[tempBomb.getY()+i][tempBomb.getX()].getImage() == this.bazziImage) this.deathCheck = true;
+//						if(this.map[tempBomb.getY()+i][tempBomb.getX()].getImage() == this.itemImage) {
+//							this.map[tempBomb.getY()+i][tempBomb.getX()].setImage(grassImage);
+//						}
+//						if(this.map[tempBomb.getY()+i][tempBomb.getX()].getImage() == this.brickImage) {
+//							int rNum = this.random.nextInt(5);
+//							if(rNum == 0) this.map[tempBomb.getY()+i][tempBomb.getX()].setImage(itemImage);
+//							else this.map[tempBomb.getY()+i][tempBomb.getX()].setImage(grassImage);
+//						}
+//						if(this.map[tempBomb.getY()+i][tempBomb.getX()].getImage() == this.bombImage) {
+//							check = true;
+//							tempY = tempBomb.getY()+i;
+//							tempX = tempBomb.getX();			
+//						}
+//					}
+//				}
+//				this.map[this.bombArr.get(0).getY()][this.bombArr.get(0).getX()].setImage(grassImage);
+//				this.map[this.bombArr.get(0).getY()][this.bombArr.get(0).getX()].setBazziCheck(false);
+//				
+//				if(!check) {
+//					this.bombArr.remove(0);
+//					this.bombCnt --;
+//					this.bombCntText.setText(String.format("<html>BombCnt : %d<br>BombMaxCnt : %d<br><br>SpaceBar : ÆøÅº¼³Ä¡<br>A : ÆøÆÄ</html>", this.bombCnt , this.bombMax));
+//					break;
+//				}
+//				else {
+//					for(int i=0; i<this.bombArr.size(); i++) {
+//						if(this.bombArr.get(i).getX() == tempX && this.bombArr.get(i).getY() == tempY) { //À§¿¡ ÆøÅºÀ» ±â¾ïÇÑ À§Ä¡¿¡¼­ ÀÎµ¦½º¸¦ Ã£À½. 
+//							idx = i;
+//						}
+//					}
+//					Map temp2 = this.bombArr.get(0); // Ã£Àº ÀÎµ¦½º¸¦ Á¦ÀÏ ¾ÕÀ¸·Î º¸³»°í 0ÀÎµ¦½º¸¦ µÚ·Îº¸³»°í Áö¿ö¹ö¸² ±×¸®°í while¹® ´Ù½Ã ¹Ýº¹(¿·¿¡ ÆøÅºÀÌ ¾øÀ»¶§±îÁö)
+//					this.bombArr.set(0, this.bombArr.get(idx));
+//					this.bombArr.set(idx, temp2);
+//					this.bombArr.remove(idx);
+//					
+//					this.bombCnt --;
+//					this.bombCntText.setText(String.format("<html>BombCnt : %d<br>BombMaxCnt : %d<br><br>SpaceBar : ÆøÅº¼³Ä¡<br>A : ÆøÆÄ</html>", this.bombCnt , this.bombMax));	
+//					check = false;
+//				}
+//			
+//			}
+//				
+//				
+//			}
+//		if(this.deathCheck) {
+//			CrazyArcade.end();
+//		}
+			
+			
+			
 	}//keyReleased();
 	
 
