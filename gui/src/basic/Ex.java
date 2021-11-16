@@ -41,6 +41,11 @@ class ExPanel2 extends MyUtil {
 //		remove(image);
 //		this.revalidate();
 //		this.repaint();
+		
+//		add(Panel);
+//		ㄴ setContentPane().add(Panel); 이랑 같은거임 앞에 set이 생략되어있음.
+//		ㄴ setContentPane(Panel)  셋으로 판넬을 수정가능함 . 일일이 전부다 지우고 새로 쓸 필요가 없음.
+		
 	}
 	@Override
 	protected void paintComponent(Graphics g) {
