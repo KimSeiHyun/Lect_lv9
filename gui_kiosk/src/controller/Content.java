@@ -1,6 +1,7 @@
 package controller;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -8,13 +9,31 @@ import java.util.Vector;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
 import models.Coffees;
-import models.MainFrame;
 import models.Teas;
 
+class AlertCntZero extends JFrame {
+	
+	JLabel text = new JLabel("메뉴를 선택해주세요.");
+	public AlertCntZero() {
+		setLayout(null);
+		setBounds(550,300,300,200);
+		
+		this.text.setBounds(0,0,300,150);
+		this.text.setFont(new Font("",Font.BOLD,20));
+		this.text.setHorizontalAlignment(JLabel.CENTER);
+		this.text.setVerticalAlignment(JLabel.CENTER);
+		add(text);
+		
+		setVisible(true);
+		revalidate();
+	}
+}
 
 public class Content extends MyUtil{
 	
@@ -43,6 +62,15 @@ public class Content extends MyUtil{
 	JButton calculateButton = new JButton();
 	
 	JTable table = null;
+	JScrollPane js = null;
+	int total = 0;
+	int totalCnt = 0;
+	//state = 3
+	
+	JTable state3Table = null;
+	JScrollPane state3Js = null;
+	
+
 	public Content() {
 		setLayout(null);
 		setBounds(0,0,800,900);
@@ -51,6 +79,8 @@ public class Content extends MyUtil{
 		setTable();
 		setArraylist();
 		setState1Button();
+		setState3Table();
+		setState2Button();
 		this.setState2TeaButton();
 		this.setState2CoffeeButton();
 	}
@@ -90,34 +120,42 @@ public class Content extends MyUtil{
 		this.teas.add(new Teas("블루레몬에이드",3500));
 		this.teas.add(new Teas("자몽에이드",3500));
 		
+		Vector<String> temp = new Vector<>();
+		temp.add("총금액");
+		temp.add("0");
+		temp.add("0");
+		this.barsket.add(temp);
+		
 	}
 
 	private void setState2Button() {
 		this.coffeeMenuButton.setBounds(0,100,200,50);
 		this.coffeeMenuButton.setBackground(new Color(240, 233, 210));
 		this.coffeeMenuButton.addActionListener(this);
-		add(this.coffeeMenuButton);
 		this.teaMenuButton.setBounds(200,100,200,50);
 		this.teaMenuButton.addActionListener(this);
 		this.teaMenuButton.setBackground(new Color(240, 233, 210));
-		add(this.teaMenuButton);
 		this.null1Button.setBounds(400,100,200,50);
 		this.null1Button.setBackground(new Color(240, 233, 210));
 		this.null2Button.setBounds(600,100,200,50);
 		this.null2Button.setBackground(new Color(240, 233, 210));
-		add(this.null1Button);
-		add(this.null2Button);
 		this.resetButton.setBounds(660,750,100,50);
 		this.resetButton.setText("처음으로");
 		this.resetButton.setBackground(new Color(240, 233, 210));
 		this.resetButton.addActionListener(this);
-		add(this.resetButton);
 		this.calculateButton.setBounds(660,805,100,50);
 		this.calculateButton.setText("계산하기");
 		this.calculateButton.setBackground(new Color(240, 233, 210));
 		this.calculateButton.addActionListener(this);
+	}
+	
+	private void addState2Button() {
+		add(this.coffeeMenuButton);
+		add(this.teaMenuButton);
+		add(this.null1Button);
+		add(this.null2Button);
+		add(this.resetButton);
 		add(this.calculateButton);
-		
 	}
 	
 	private void setState2CoffeeButton() {
@@ -167,18 +205,13 @@ public class Content extends MyUtil{
 	private void removeState2CoffeeButton() {
 		for(int i=0; i<this.coffeButtons.length; i++) {
 			remove(this.coffeButtons[i]);
-			//this.coffeButtons[i] = null;
 		}
-		//this.coffeButtons = new JButton[16];
 	}
 	private void removeState2teaButton() {
 		
 		for(int i=0; i<this.teaButtons.length; i++) {
 			remove(this.teaButtons[i]);
-			//	this.teaButtons[i] = null;
 		}
-		
-		//this.teaButtons = new JButton[16];
 	}
 	
 	private void RemoveState2MenuButton() {
@@ -215,7 +248,7 @@ public class Content extends MyUtil{
 			temp.add(this.coffees.get(i).getName());
 			temp.add(this.coffees.get(i).getPrice()+"");
 			temp.add(1+"");
-			this.barsket.add(temp);
+			this.barsket.add(0,temp);
 		}
 	}
 	
@@ -229,7 +262,6 @@ public class Content extends MyUtil{
 					cntTemp ++;
 					temp = cntTemp+"";
 					this.barsket.get(j).set(2, temp);
-					
 				}
 		}
 		if(check == 1) {
@@ -237,7 +269,7 @@ public class Content extends MyUtil{
 			temp.add(this.teas.get(i).getName());
 			temp.add(this.teas.get(i).getPrice()+"");
 			temp.add(1+"");
-			this.barsket.add(temp);
+			this.barsket.add(0,temp);
 		}
 	}
 	
@@ -251,26 +283,59 @@ public class Content extends MyUtil{
 
 		this.table = new JTable(this.barsket , temp);
 		
-		this.table.setBounds(0,750,500,100);
+		//this.table.setBounds(0,750,500,100);
 		this.table.setCellEditor(null);
 		this.table.setDragEnabled(true);
 		this.table.setCellSelectionEnabled(true);
 		//add(this.table);
 		
-		JScrollPane js = new JScrollPane(table);
-	//	js.setBounds(0,750,500,100);
+		js = new JScrollPane(table);
+		js.setBounds(0,750,600,100);
 		js.setAutoscrolls(true); // 필요시에 스크롤바가 등장.
-		add(js);
+		
 		setVisible(true);
 	}
 	
+	private void setState3Table() {
+		Vector<String> temp = new Vector<>();
+		
+		temp.add("이름");
+		temp.add("가격");
+		temp.add("수량");
+		
+		this.state3Table = new JTable(this.barsket , temp);
+		this.state3Table.setBounds(50,100,500,600);
+		
+		this.state3Js = new JScrollPane(this.state3Table);
+		this.state3Js.setBounds(50,100,500,600);
+		this.state3Js.setAutoscrolls(true);
+	}
+	
+
+	
+	private void setTotal() {
+		int temp = 0;
+		for(int i=0; i<this.barsket.size()-1; i++) {
+			int price = Integer.parseInt(this.barsket.get(i).get(1));
+			int cnt = Integer.parseInt(this.barsket.get(i).get(2));
+			temp += price * cnt;			
+		}
+		this.total = temp;
+		
+		int tempCnt = 0;
+		for(int i=0; i<this.barsket.size()-1; i++) {
+			int cnt = Integer.parseInt(this.barsket.get(i).get(2));
+			tempCnt += cnt;			
+		}
+		this.totalCnt = tempCnt;
+	}
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		if(this.state == 1) {
 			g.drawImage(mainImage,0,0,null );			
 		}
-		if(this.state == 2) {
+		if(this.state == 2 || this.state == 3) {
 			g.drawImage(this.state2HeadImage,0,0,null);
 		}
 		
@@ -279,15 +344,17 @@ public class Content extends MyUtil{
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		setTotal();
 		if(e.getSource() == this.inDrinkButton) {
 			this.state = 2;
 			this.addState2CoffeeButton();
-			setState2Button();
+			this.addState2Button();
+			
 		}
 		if(e.getSource() == this.takeOutButton) {
 			this.state = 2;
 			this.addState2CoffeeButton();
-			setState2Button();
+			this.addState2Button();
 		}
 		if(e.getSource() == this.resetButton) {
 			this.state = 1;
@@ -297,6 +364,22 @@ public class Content extends MyUtil{
 			remove(this.resetButton);
 			remove(this.calculateButton);
 			this.barsket.clear();
+			Vector<String> temp = new Vector<>();
+			temp.add("총금액");
+			temp.add("0");
+			temp.add("0");
+			this.barsket.add(temp);
+		}
+		if(this.state == 3 && e.getSource() == this.calculateButton) {
+			new CouponFrame();
+		}
+		
+		if(this.state == 2  && e.getSource() == this.calculateButton) {
+			if(this.barsket.size() > 1) {
+				this.state = 3;				
+			}else if(this.barsket.size() == 1) {
+				new AlertCntZero();
+			}
 		}
 		
 		if(e.getSource() == this.teaMenuButton) {
@@ -326,14 +409,25 @@ public class Content extends MyUtil{
 					this.addTeaBarsket(i);
 				}
 			}
+			add(this.js);
 		}else {
+			this.removeState2CoffeeButton();
+			this.removeState2teaButton();
 			RemoveState2MenuButton();
+			remove(this.js);
 		}
 		
-		for(int i=0; i<this.barsket.size(); i++) {
-				System.out.printf("%s , %s , %s \n" , this.barsket.get(i).get(0) , this.barsket.get(i).get(1) , this.barsket.get(i).get(2));
+		if(this.state == 3) {
+			add(this.state3Js);
+		}else {
+			remove(this.state3Js);
 		}
+		
+		setTotal();
+		this.barsket.get(this.barsket.size()-1).set(1, this.total+"");
+		this.barsket.get(this.barsket.size()-1).set(2, this.totalCnt+"");
 		revalidate();
 		repaint();
+		table.revalidate();
 	}
 }
