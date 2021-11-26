@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
@@ -37,7 +38,7 @@ class AlertCntZero extends JFrame {
 
 public class Content extends MyUtil{
 	
-	private int state = 1;
+	public static int state = 1;
 	Vector<Coffees> coffees = new Vector<>();
 	Vector<Teas> teas = new Vector<>();
 	Image mainImage = new ImageIcon("images/Main.png").getImage().getScaledInstance(800, 900, Image.SCALE_SMOOTH);
@@ -63,26 +64,54 @@ public class Content extends MyUtil{
 	
 	JTable table = null;
 	JScrollPane js = null;
-	int total = 0;
+	public static int total = 0;
+	
 	int totalCnt = 0;
 	//state = 3
 	
 	JTable state3Table = null;
 	JScrollPane state3Js = null;
 	
-
+	//state = 4
+	Image inputCardImage = new ImageIcon("images/inputCard.png").getImage().getScaledInstance(800, 700, Image.SCALE_SMOOTH);
+	boolean state4Check = true;
+	JLabel state4Text = new JLabel();
+	int second = 0;
+	int state4Cnt = 0;
+	
+	//state = 5;
+	JLabel state5Text = new JLabel("이용해 주셔서 감사합니다.");
+	boolean state5Check = true;
+	boolean state5Content = true;
+	int state5Cnt = 0;
+	
 	public Content() {
 		setLayout(null);
 		setBounds(0,0,800,900);
-		
+		addMouseMotionListener(this);
+		addMouseListener(this);
 		setBackground(new Color(103, 137, 131));
 		setTable();
 		setArraylist();
 		setState1Button();
 		setState3Table();
 		setState2Button();
+		setState4Text();
+		setState5Text();
 		this.setState2TeaButton();
 		this.setState2CoffeeButton();
+	}
+
+	private void setState5Text() {
+		this.state5Text.setBounds(150,580,600,50);
+		this.state5Text.setForeground(Color.white);
+		this.state5Text.setFont(new Font("",1,40));
+	
+	}
+
+	private void setState4Text() {
+		this.state4Text.setBounds(0,700,700,100);
+		this.state4Text.setFont(new Font("",1,40));
 	}
 
 	private void setArraylist() {
@@ -337,8 +366,89 @@ public class Content extends MyUtil{
 		}
 		if(this.state == 2 || this.state == 3) {
 			g.drawImage(this.state2HeadImage,0,0,null);
+			System.out.println("여기는스테이트2");
+		}
+		if(this.state == 4) {
+			g.drawImage(this.inputCardImage,0,0,null);
+			if(this.state4Check) {
+				remove(this.resetButton);
+				remove(this.calculateButton);
+				remove(this.state3Js);
+				this.state4Check = false;
+				this.state4Text.setText(String.format("총 금액 : %d원 ", this.total));
+				add(this.state4Text);
+			}
+			if(this.second == 1) {
+				g.setColor(Color.black);
+				g.fillRoundRect(330, 380, 20, 20, 20, 20);
+			}
+			if(this.second == 2) {
+				g.setColor(Color.black);
+				g.fillRoundRect(330, 380, 20, 20, 20, 20);
+				g.fillRoundRect(370, 380, 20, 20, 20, 20);
+			}
+			if(this.second == 3) {
+				g.setColor(Color.black);
+				g.fillRoundRect(330, 380, 20, 20, 20, 20);
+				g.fillRoundRect(370, 380, 20, 20, 20, 20);
+				g.fillRoundRect(410, 380, 20, 20, 20, 20);
+			}
+		}
+		if(!this.state4Check && this.state == 4) {
+			try {
+				Thread.sleep(1000);
+				this.second ++;
+				if(this.second == 4) {
+					this.second = 0;
+					this.state4Cnt ++;
+				}
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}
+		if(this.state4Cnt == 2) {
+			remove(this.state4Text);
+			this.state = 5;
+			this.state4Cnt = -1;
+			this.state4Check = true;
+		}
+		if(this.state == 5) {
+			g.drawImage(mainImage,0,0,null );
+			if(this.state5Check) {
+				add(this.state5Text);
+				this.state5Check = false;
+			}
+			if(this.state5Content) {
+				try {
+					Thread.sleep(1000);
+					this.state5Cnt ++;
+					if(this.state5Cnt == 5) {
+						this.state5Content = false;
+					}
+				} catch (Exception e) {
+					// TODO: handle exception
+			}
+			}
 		}
 		
+		if(this.state5Cnt == 5) {
+			System.out.println("b");
+			this.state = 1;
+			remove(this.state5Text);
+			CouponPanel.member = null;
+			add(this.inDrinkButton);
+			add(this.takeOutButton);
+			this.barsket.clear();
+			Vector<String> temp = new Vector<>();
+			temp.add("총금액");
+			temp.add("0");
+			temp.add("0");
+			this.barsket.add(temp);
+			this.state5Cnt = 0;
+			this.state5Check = true;
+			this.state5Content = true;
+		}
+		revalidate();
 		repaint();
 	}
 	
@@ -349,12 +459,15 @@ public class Content extends MyUtil{
 			this.state = 2;
 			this.addState2CoffeeButton();
 			this.addState2Button();
-			
+			System.out.println("aaa");
+			System.out.println("state : " + this.state);
 		}
 		if(e.getSource() == this.takeOutButton) {
 			this.state = 2;
 			this.addState2CoffeeButton();
 			this.addState2Button();
+			System.out.println("bbb");
+			System.out.println("state : " + this.state);
 		}
 		if(e.getSource() == this.resetButton) {
 			this.state = 1;
@@ -404,9 +517,11 @@ public class Content extends MyUtil{
 			for(int i=0; i<this.coffeButtons.length; i++) {
 				if(e.getSource() == this.coffeButtons[i]) {
 					this.addCoffeeBarsket(i);
+					System.out.println("ccc");
 				}
 				if(e.getSource() == this.teaButtons[i]) {
 					this.addTeaBarsket(i);
+					System.out.println("ddd");
 				}
 			}
 			add(this.js);
@@ -423,11 +538,23 @@ public class Content extends MyUtil{
 			remove(this.state3Js);
 		}
 		
+		
+		
 		setTotal();
 		this.barsket.get(this.barsket.size()-1).set(1, this.total+"");
 		this.barsket.get(this.barsket.size()-1).set(2, this.totalCnt+"");
 		revalidate();
 		repaint();
 		table.revalidate();
+		
+		System.out.println("state(last) : " + this.state);
+		
 	}
+	
+	@Override
+	public void mousePressed(MouseEvent e) {
+		System.out.println(e.getX());
+		System.out.println(e.getY());
+	}
+
 }

@@ -22,9 +22,7 @@ public class MainFrame extends JFrame{
 		revalidate();
 	}
 	
-	public void test() {
-		dispose();
-	}
+
 	
 
 }

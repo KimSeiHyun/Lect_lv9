@@ -5,6 +5,10 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.Vector;
 
 import javax.swing.JButton;
@@ -96,7 +100,8 @@ class AlertSignUpFrame extends JFrame implements ActionListener{
 				}
 			}
 			if(check == 0) {
-				CouponPanel.members.add(new Members(name , phoneNumber , 0,0));
+				// 테스트를 위해 스탬프 15개와 포인트 300을 지급
+				CouponPanel.members.add(new Members(name , phoneNumber , 15));
 				CouponPanel.member = CouponPanel.members.get(CouponPanel.members.size()-1);
 				new AlertSignUpEndFrame();
 			}else {
@@ -117,12 +122,19 @@ class CouponPanel extends MyUtil {
 	JButton enterButton = new JButton("회원확인");
 	JButton signUpButton = new JButton("가입하기");
 	JButton useCouponButton = new JButton("쿠폰사용");
-	JButton usePointButton = new JButton("포인트사용");
-	JButton useCouponAndPointButton = new JButton("쿠폰과 포인트 사용");
 	JButton NotUseButton = new JButton("사용안함");
+	
+	boolean couponUse = false;
+	boolean potinUse = false;
 	
 	public static Vector<Members> members = new Vector<>();
 	public static Members member = null;
+	
+	
+	File file = new File("KioskMembers.txt");
+	FileWriter fw = null;
+	FileReader fr = null;
+	BufferedReader br = null;
 	public CouponPanel() {
 		setLayout(null);
 		setBounds(0,0,600,600);
@@ -132,6 +144,7 @@ class CouponPanel extends MyUtil {
 		setButton();
 	}
 	private void setButton() {
+		load();
 		this.enterButton.setBounds(420,120,100,50);
 		this.enterButton.addActionListener(this);
 		add(this.enterButton);
@@ -144,22 +157,13 @@ class CouponPanel extends MyUtil {
 		this.useCouponButton.addActionListener(this);
 		add(this.useCouponButton);
 		
-		this.usePointButton.setBounds(50,350,200,50);
-		this.usePointButton.addActionListener(this);
-		add(this.usePointButton);
-		
-		this.useCouponAndPointButton.setBounds(300,350,200,50);
-		this.useCouponAndPointButton.addActionListener(this);
-		add(this.useCouponAndPointButton);
-		
-		this.NotUseButton.setBounds(175,450,200,50);
+		this.NotUseButton.setBounds(175,320,200,50);
 		this.NotUseButton.addActionListener(this);
 		add(this.NotUseButton);
 		
 	}
 	private void setText() {
 		this.text.setText("<html>쿠폰은 한번에 한개씩 사용하실수 있으며<br>"
-				+ "적립금은 한번에 전부 사용이 가능합니다.<br>"
 				+ "이름과 전화번호를 입력후 엔터 또는 확인버튼을 눌려주세요</html>");
 		this.text.setBounds(0,0,600,100);
 		this.text.setFont(new Font("",Font.BOLD, 18));
@@ -194,10 +198,63 @@ class CouponPanel extends MyUtil {
 			this.memberCheck();
 		}
 		if(e.getSource() == this.NotUseButton) {
-
+			this.member = null;
+			Content.state = 4;
+			save();
+		}
+		if(e.getSource() == this.useCouponButton) {
+			if(this.member == null) {
+				return;
+			}else {
+				if(this.member.getStamp() >= 10) {
+					for(int i=0; i<this.members.size(); i++) {
+						if(this.members.get(i).getName().equals(this.member.getName()) && this.members.get(i).getPhoneNumber().equals(this.member.getPhoneNumber())) {
+							this.members.get(i).setStamp((this.members.get(i).getStamp()-10));
+							Content.total -= 1500;
+							Content.state = 4;
+							save();
+						}
+					}
+				}
+			}
 		}
 	}
 	
+	private void save() {
+		try {
+			fw = new FileWriter(file);
+			for(int i=0; i<this.members.size(); i++) {
+				Members temp = this.members.get(i);
+				fw.write(temp.getName()+"/"+temp.getPhoneNumber()+"/"+temp.getStamp()+"\n");
+			}
+			fw.close();
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
+	
+	private void load() {
+		this.members.clear();
+		try {
+			fr = new FileReader(file);
+			br = new BufferedReader(fr);
+			while(true) {
+				String data = br.readLine();
+				if(data == null) break;
+				
+				String temp[] = data.split("/");
+				String name = temp[0];
+				String phoneNumber = temp[1];
+				int stamp = Integer.parseInt(temp[2]);
+				this.members.add(new Members(name , phoneNumber , stamp));
+			}
+			
+			fr.close();
+			br.close();
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
 	@Override
 	public void keyPressed(KeyEvent e) {
 		if(e.getKeyChar() == e.VK_ENTER) {
@@ -212,8 +269,9 @@ class CouponPanel extends MyUtil {
 		for(int i=0; i<this.members.size(); i++) {
 			Members temp = this.members.get(i);
 			if(temp.getName().equals(name) && temp.getPhoneNumber().equals(phoneNumber)) {
+				this.member = temp;
 				check = 1;
-				this.memberText.setText(String.format("<html>%s(%s)님의 쿠폰 및 적립금 보유 현황 : %d장 , %d원</html>",temp.getName(),temp.getPhoneNumber(),temp.getStamp(),temp.getPoint() ));	
+				this.memberText.setText(String.format("<html>%s(%s)님의 쿠폰 현황 : %d장</html>",temp.getName(),temp.getPhoneNumber(),temp.getStamp()/10 ));	
 			}
 		}
 		if(check == 0) {
@@ -224,20 +282,40 @@ class CouponPanel extends MyUtil {
 }
 
 
-public class CouponFrame extends JFrame{
+public class CouponFrame extends JFrame implements ActionListener{
 	
+	CouponPanel c = new CouponPanel();
 	public CouponFrame() {
 		super("Coupon");
 		setLayout(null);
-		setBounds(550,300,600,600);
+		setBounds(550,300,600,470);
 		
-		add(new CouponPanel());
+		add(c);
 		setVisible(true);
 		revalidate();
+		c.NotUseButton.addActionListener(this);
+		c.useCouponButton.addActionListener(this);
 	}
 	
-	private void end() {
-		dispose();
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource() == c.NotUseButton) {
+			this.dispose();
+		}
+		if(e.getSource() == c.useCouponButton) {
+			if(c.member == null) {
+				c.memberText.setText("회원정보를 먼저 확인해주세요.");
+				return;
+			}else {
+				if(c.member.getStamp() < 10) {
+					c.memberText.setText("사용하실 쿠폰이 부족합니다.");
+				}
+				if(c.member.getStamp() >= 10) {
+					this.dispose();
+				}
+			}
+		}
 	}
 	
 }
